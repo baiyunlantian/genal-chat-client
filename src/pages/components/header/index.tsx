@@ -6,6 +6,7 @@ import {
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
+import { Popconfirm } from 'antd';
 import styles from './index.less';
 import { connect } from 'umi';
 
@@ -36,7 +37,9 @@ const Header = (props:any) => {
 
       <div className={styles.title}>阿童木聊天室</div>
       <div className={styles.leftIcon}>
-        <TeamOutlined className='commonIcon'/>
+        <Popconfirm title="确定要退出该群聊吗" okText="确定" cancelText="取消">
+          <TeamOutlined className='commonIcon'/>
+        </Popconfirm>
       </div>
     </div>
   );

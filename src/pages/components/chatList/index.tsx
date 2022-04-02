@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Drawer, Input, Menu, Dropdown } from 'antd';
+import { Drawer, Input, Menu, Dropdown, Avatar, Badge } from 'antd';
 import { connect } from 'umi';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import SearchChatModal from '@/pages/components/searchChatModal';
+import Friend from '@/assets/friend.png';
+import Group from '@/assets/group.png';
 import styles from './index.less';
 
 const MenuItems = [
@@ -18,12 +20,29 @@ const ChatList = (props:any) => {
     searchIconIsActive,
     showSearchChatModal,
     chatList,
+    currentChat,
   }, setState] = useState({
     searchChatName:'',
     title:'0',
+    currentChat:'',
     searchIconIsActive:false,
     showSearchChatModal:false,
-    chatList:[]
+    chatList:[
+      {
+        attr:Friend,
+        unread:4,
+        name:'yzh',
+        msg:'123',
+        id:'Friend'
+      },
+      {
+        attr:Group,
+        unread:0,
+        name:'聊天组',
+        msg:'222',
+        id:'Group'
+      }
+    ]
   })
 
   const {app, dispatch} = props
@@ -48,6 +67,10 @@ const ChatList = (props:any) => {
     setState(state=>({...state, showSearchChatModal: visible}))
   }
 
+  const handleToggleChat = (chatId:string) => {
+    setState(state=>({...state, currentChat: chatId}))
+  }
+
   const MENU = (
      <Menu selectable onClick={handleClickMenuItem}>
       {
@@ -70,7 +93,7 @@ const ChatList = (props:any) => {
       visible={chatListVisible}
       onClose={handleClickAvatar}
     >
-      <div>
+      <div className={'search-input-container'}>
         <Input placeholder="搜索聊天组" value={searchChatName} onChange={e=>setState(state=>({...state, searchChatName: e.target.value}))}/>
         <Dropdown overlay={MENU} onVisibleChange={visible => setState(state=>({...state, searchIconIsActive: visible}))}>
           <PlusCircleOutlined className={`${searchIconIsActive ? 'isActive' : ''} commonIcon`}/>
@@ -78,7 +101,19 @@ const ChatList = (props:any) => {
       </div>
 
       <div className='chart-list'>
-
+        {chatList.map(item=>{
+          return <Badge
+            count={item.unread}
+            className={`${currentChat === item.id ? 'bgcDynamic' : 'bgcNone'} chart-item`}
+            key={item.id}
+          >
+            <Avatar src={item.attr} alt='*' className='chart-avatar' size={36} shape={'circle'}/>
+            <div className={`item-content`} onClick={()=>handleToggleChat(item.id)}>
+              <div>{item.name}</div>
+              <div>{item.msg}</div>
+            </div>
+          </Badge>
+        })}
       </div>
 
       <SearchChatModal

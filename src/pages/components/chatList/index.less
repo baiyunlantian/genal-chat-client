@@ -1,7 +1,5 @@
 .chatListContainer{
 
-
-
   :global {
     .ant-drawer-mask{
       background-color: unset !important;
@@ -14,10 +12,9 @@
         background-color: rgba(0, 0, 0, 0.5) !important;
 
         .ant-drawer-body{
-          padding: 0.8rem;
-
-          >div{
-            position: relative;
+          padding: 0;
+          .search-input-container{
+            padding: 0.8rem;
 
             .isActive{
               background-color: rgb(135, 206, 235);
@@ -25,7 +22,7 @@
 
             .commonIcon{
               position: absolute;
-              right: 0;
+              right: 1.2rem;
               width: 2rem;
               height: 2rem;
               line-height: 2rem;
@@ -36,6 +33,41 @@
                 >path{color: #828283}
               }
             }
+          }
+
+          .chart-list{
+            display: flex;
+            flex-direction: column;
+            color: #f0f2f5;
+
+            .chart-item{
+              position: relative;
+              display: flex;
+              align-items: center;
+              padding: 0.6rem;
+              height: 4.5rem;
+              background-color: #25435c7d;
+              transition: all .3s;
+
+              .ant-badge-count{
+                right: 1.25rem;
+                top: 1.25rem;
+              }
+
+              .item-content{
+                color: #d1d1d1;
+                width: 100%;
+                font-size: 1rem;
+                margin-left: 0.5rem;
+
+                >div:first-child{
+                  margin-bottom: 5px;
+                }
+              }
+            }
+
+            .bgcDynamic{background-color: #5e98e442;}
+            .bgcNone{background-color: unset;}
           }
         }
       }
