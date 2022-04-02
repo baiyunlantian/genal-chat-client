@@ -1,0 +1,44 @@
+.chatListContainer{
+
+
+
+  :global {
+    .ant-drawer-mask{
+      background-color: unset !important;
+    }
+
+    .ant-drawer-content-wrapper{
+      width: 65% !important;
+
+      .ant-drawer-content{
+        background-color: rgba(0, 0, 0, 0.5) !important;
+
+        .ant-drawer-body{
+          padding: 0.8rem;
+
+          >div{
+            position: relative;
+
+            .isActive{
+              background-color: rgb(135, 206, 235);
+            }
+
+            .commonIcon{
+              position: absolute;
+              right: 0;
+              width: 2rem;
+              height: 2rem;
+              line-height: 2rem;
+              border-radius: 5px;
+
+              >svg{
+                font-size: 1.2rem;
+                >path{color: #828283}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
