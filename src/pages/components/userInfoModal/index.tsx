@@ -1,11 +1,13 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Modal, Avatar, Form, Input, Button } from 'antd';
 import { connect } from 'umi';
+import AvatarImg from '@/assets/avatar(1).png';
+import { login } from '@/api';
 import styles from './index.less';
 
-const UserInfoModal = (props:any) => {
-  const {app, dispatch} = props
-  const visible = app.userInfoModalVisible
+const UserInfoModal = (props: any) => {
+  const { app, dispatch } = props;
+  const visible = app.userInfoModalVisible;
   const [form] = Form.useForm();
 
   const onFinish = (values: any) => {
@@ -20,12 +22,12 @@ const UserInfoModal = (props:any) => {
     form.resetFields();
 
     dispatch({
-      type:'app/changeBoolean',
-      payload:{
-        key:'userInfoModalVisible',
-        value:false
+      type: 'app/changeBoolean',
+      payload: {
+        key: 'userInfoModalVisible',
+        value: false,
       },
-    })
+    });
   };
 
   return (
@@ -38,7 +40,7 @@ const UserInfoModal = (props:any) => {
       forceRender
     >
       <div className={styles.avatar}>
-        <Avatar size={45} className={styles.userImg} src={require('@/assets/avatar(1).png')} />
+        <Avatar size={45} className={styles.userImg} src={AvatarImg} />
       </div>
 
       <Form
@@ -46,13 +48,16 @@ const UserInfoModal = (props:any) => {
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
-        labelCol={{xs:{span:8}}}
-        wrapperCol={{xs:{span:12}}}
+        labelCol={{ xs: { span: 8 } }}
+        wrapperCol={{ xs: { span: 12 } }}
+        form={form}
       >
         <Form.Item
           label="更改用户名"
           name="username"
-          rules={[{ required: true, message: '请输入用户名!', whitespace:true }]}
+          rules={[
+            { required: true, message: '请输入用户名!', whitespace: true },
+          ]}
         >
           <Input />
         </Form.Item>
@@ -60,7 +65,7 @@ const UserInfoModal = (props:any) => {
         <Form.Item
           label="更改密码"
           name="password"
-          rules={[{ required: true, message: '请输入密码!', whitespace:true }]}
+          rules={[{ required: true, message: '请输入密码!', whitespace: true }]}
         >
           <Input.Password />
         </Form.Item>
@@ -73,6 +78,6 @@ const UserInfoModal = (props:any) => {
       </Form>
     </Modal>
   );
-}
+};
 
-export default connect(({app}:{app:object})=>({app}))(UserInfoModal)
+export default connect(({ app }: { app: object }) => ({ app }))(UserInfoModal);

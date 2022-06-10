@@ -5,12 +5,17 @@ export default defineConfig({
     type: 'none',
   },
   // 提升编译速度
-  mfsu:{},
+  mfsu: {},
   // 开启ant-design-pro布局
   // layout: {},
   devtool: false,
-  routes: [
-    { path: '/', component: '@/pages/index' },
-  ],
+  routes: [{ path: '/', component: '@/pages/index' }],
   fastRefresh: {},
+  proxy: {
+    '/api': {
+      target: 'http://192.168.3.84:3025',
+      changeOrigin: true,
+      pathRewrite: { '^/api': '' },
+    },
+  },
 });
