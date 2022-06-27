@@ -1,8 +1,8 @@
-import React from 'react';
-import { Button, Form, Input, Modal, Tabs } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Button, Form, Input, Modal, Tabs, message } from 'antd';
 import { connect } from 'umi';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { login } from '@/api';
+import { login, register } from '@/api';
 // @ts-ignore
 import md from 'js-md5';
 import styles from './index.less';
@@ -10,17 +10,44 @@ import styles from './index.less';
 const { TabPane } = Tabs;
 
 const LoginModal = (props: any) => {
+  const [tab, setTab] = useState<string>('1');
   const { user, dispatch } = props;
-  const token = user.token;
+  const token = user.token
+    ? user.token
+    : sessionStorage.getItem('access_token');
   const [form] = Form.useForm();
 
-  const onFinish = (values: { username: string; password: string }) => {
-    const { password, username } = values;
-    const params = { username, password: md(password) };
+  const onFinish = (values: { account: string; password: string }) => {
+    const { password, account } = values;
+    const params = { username: account, password: md(password) };
 
-    login(params).then((res) => {
-      console.log('res', res);
-    });
+    if (tab === '1') {
+      login(params).then((res: any) => {
+        if (res.code === 200) {
+          message.success(res.msg);
+          const { access_token, ...userInfo } = res.data;
+          dispatch({
+            type: 'user/setUserInfo',
+            payload: userInfo,
+          });
+          dispatch({
+            type: 'user/setToken',
+            payload: access_token,
+          });
+          sessionStorage.setItem('access_token', access_token);
+          sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
+          form.resetFields();
+        }
+      });
+    } else {
+      register(params).then((res: any) => {
+        if (res.code === 200) {
+          setTab('1');
+          form.resetFields();
+          message.success(res.msg);
+        }
+      });
+    }
   };
 
   return (
@@ -31,7 +58,14 @@ const LoginModal = (props: any) => {
       forceRender
       closable={false}
     >
-      <Tabs defaultActiveKey="1" onChange={() => form.resetFields()}>
+      <Tabs
+        defaultActiveKey="1"
+        activeKey={tab}
+        onChange={(e) => {
+          setTab(e);
+          form.resetFields();
+        }}
+      >
         <TabPane tab="登录" key="1" />
         <TabPane tab="注册" key="2" />
       </Tabs>
@@ -45,7 +79,7 @@ const LoginModal = (props: any) => {
       >
         <Form.Item
           label=""
-          name="username"
+          name="account"
           rules={[
             { required: true, message: '请输入用户名!', whitespace: true },
           ]}
@@ -56,7 +90,7 @@ const LoginModal = (props: any) => {
                 style={{ fontSize: '1rem', color: 'rgb(164 164 164)' }}
               />
             }
-            placeholder="username"
+            placeholder="account"
           />
         </Form.Item>
 

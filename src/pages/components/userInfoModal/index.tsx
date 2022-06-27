@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Modal, Avatar, Form, Input, Button } from 'antd';
+import { Modal, Avatar, Form, Input, Button, Upload, message } from 'antd';
 import { connect } from 'umi';
-import AvatarImg from '@/assets/avatar(1).png';
-import { login } from '@/api';
+import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
+import { uploadAvatar } from '@/api';
+import { BASE_URL } from '@/utils/config';
 import styles from './index.less';
 
 const UserInfoModal = (props: any) => {
-  const { app, dispatch } = props;
+  const { app, user, dispatch } = props;
+  const { userInfo } = user;
   const visible = app.userInfoModalVisible;
   const [form] = Form.useForm();
 
@@ -30,6 +32,37 @@ const UserInfoModal = (props: any) => {
     });
   };
 
+  const beforeUpload = (file: RcFile) => {
+    console.log('handleChange', file);
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    if (!isJpgOrPng) {
+      message.error('You can only upload JPG/PNG file!');
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error('Image must smaller than 2MB!');
+    }
+    return isJpgOrPng && isLt2M;
+  };
+
+  const handleChange = (res: any) => {
+    const { file } = res;
+    let formData = new FormData();
+    formData.append('file', file);
+    formData.append('userId', userInfo.userId);
+
+    uploadAvatar(formData).then((res) => {
+      if (res.code === 200) {
+        message.success(res.msg);
+        dispatch({
+          type: 'user/setUserInfo',
+          payload: res.data,
+        });
+        sessionStorage.setItem('userInfo', JSON.stringify(res.data));
+      }
+    });
+  };
+
   return (
     <Modal
       title="用户信息"
@@ -39,9 +72,27 @@ const UserInfoModal = (props: any) => {
       className={styles.userInfoModal}
       forceRender
     >
-      <div className={styles.avatar}>
-        <Avatar size={45} className={styles.userImg} src={AvatarImg} />
-      </div>
+      <Upload
+        accept="image/jpeg,image/jpeg,image/png"
+        name="file"
+        listType="picture"
+        className={styles.avatarUploader}
+        showUploadList={false}
+        // beforeUpload={beforeUpload}
+        customRequest={handleChange}
+      >
+        {userInfo && userInfo.avatar ? (
+          <div className={styles.avatar}>
+            <Avatar
+              size={70}
+              className={styles.userImg}
+              src={`${BASE_URL}${userInfo.avatar}`}
+            />
+          </div>
+        ) : (
+          <div className={styles.uploadBtn}>上传</div>
+        )}
+      </Upload>
 
       <Form
         name="basic"
@@ -80,4 +131,4 @@ const UserInfoModal = (props: any) => {
   );
 };
 
-export default connect(({ app }: { app: object }) => ({ app }))(UserInfoModal);
+export default connect(({ app, user }: any) => ({ app, user }))(UserInfoModal);

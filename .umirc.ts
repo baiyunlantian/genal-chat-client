@@ -1,4 +1,5 @@
 import { defineConfig } from 'umi';
+import { BASE_URL } from '@/utils/config';
 
 export default defineConfig({
   nodeModulesTransform: {
@@ -13,7 +14,7 @@ export default defineConfig({
   fastRefresh: {},
   proxy: {
     '/api': {
-      target: 'http://192.168.3.84:3025',
+      target: 'http://localhost:3025',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },

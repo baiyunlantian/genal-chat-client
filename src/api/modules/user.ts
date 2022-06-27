@@ -1,9 +1,17 @@
 import request from '@/utils/request';
+import { AUTH, USER } from '@/api/constants';
 
-export function login(params: object): Promise<object> {
-  return request('/user/login/', {
-    method: 'GET',
-    params,
+export function login(data: object): Promise<object> {
+  return request(`${AUTH}/login`, {
+    method: 'POST',
+    data,
+  });
+}
+
+export function register(data: object): Promise<object> {
+  return request(`${AUTH}/register`, {
+    method: 'POST',
+    data,
   });
 }
 
@@ -27,7 +35,7 @@ export function getUsersByUserName(name: string): Promise<object> {
 }
 
 export function uploadAvatar(data: FormData): Promise<object> {
-  return request(`/user/upload`, {
+  return request(`${USER}/uploadAvatar`, {
     method: 'POST',
     data,
   });

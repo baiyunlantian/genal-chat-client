@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'umi';
-import { Avatar } from 'antd';
+import { Avatar, Popconfirm } from 'antd';
 import {
   BulbOutlined,
   PoweroffOutlined,
@@ -8,10 +8,11 @@ import {
 } from '@ant-design/icons';
 import UserInfoModal from '@/pages/components/userInfoModal';
 import styles from './index.less';
-import AvatarImg from '@/assets/avatar(1).png';
+import { BASE_URL } from '@/utils/config';
 
 const LeftNav = (props: any) => {
-  const { app, dispatch } = props;
+  const { app, user, dispatch } = props;
+  const { avatar = '', username } = user.userInfo;
   const leftNavVisible = app.leftNavVisible;
 
   const handleClickAvatar = () => {
@@ -24,6 +25,18 @@ const LeftNav = (props: any) => {
     });
   };
 
+  const handleLogout = () => {
+    dispatch({
+      type: 'user/setToken',
+      payload: null,
+    });
+    dispatch({
+      type: 'user/setUserInfo',
+      payload: {},
+    });
+    sessionStorage.clear();
+  };
+
   return (
     <div
       className={`${styles.leftMenu} ${
@@ -31,13 +44,24 @@ const LeftNav = (props: any) => {
       }`}
     >
       <div className={styles.userInfo} onClick={handleClickAvatar}>
-        <Avatar size={45} className={styles.userImg} src={AvatarImg} />
-        <div className={styles.userName}>yzh</div>
+        <Avatar
+          size={45}
+          className={styles.userImg}
+          src={`${BASE_URL}${avatar}`}
+        />
+        <div className={styles.userName}>{username}</div>
       </div>
       <div className={styles.toolBtns}>
         <BulbOutlined className="commonIcon" />
         <SkinOutlined className="commonIcon" />
-        <PoweroffOutlined className="commonIcon" />
+        <Popconfirm
+          title="是否确定退出登录?"
+          onConfirm={handleLogout}
+          okText="Yes"
+          cancelText="No"
+        >
+          <PoweroffOutlined className="commonIcon" />
+        </Popconfirm>
       </div>
 
       <UserInfoModal />
@@ -45,4 +69,4 @@ const LeftNav = (props: any) => {
   );
 };
 
-export default connect(({ app }: { app: object }) => ({ app }))(LeftNav);
+export default connect(({ app, user }: any) => ({ app, user }))(LeftNav);

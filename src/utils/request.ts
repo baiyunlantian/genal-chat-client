@@ -1,25 +1,39 @@
-import { extend } from 'umi-request';
+import {
+  extend,
+  RequestInterceptor,
+  ResponseError,
+  ResponseInterceptor,
+} from 'umi-request';
+import { message } from 'antd';
 
 const request = extend({
-  timeout: 6000,
-  prefix: '/api',
+  timeout: 1000 * 60,
 });
 
 // 拦截请求
-request.interceptors.request.use((url, options) => {
-  console.log('url', url);
-  console.log('options', options);
+request.interceptors.request.use((url, options: any) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+    token: sessionStorage.getItem('access_token'),
+  };
 
   return {
     url,
-    options: { ...options, interceptors: true },
+    options: {
+      ...options,
+      ...headers,
+      interceptors: true,
+    },
   };
 });
 
-// 拦截相应
-request.interceptors.response.use((response, options) => {
-  console.log('response', response);
-  console.log('options', options);
+// 拦截响应
+request.interceptors.response.use(async (response, options) => {
+  const { code, msg } = await response.clone().json();
+  if (code !== 200) {
+    message.error(msg || '服务异常');
+  }
   return response;
 });
 
