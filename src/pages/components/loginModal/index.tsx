@@ -119,4 +119,4 @@ const LoginModal = (props: any) => {
   );
 };
 
-export default connect(({ user }: { user: object }) => ({ user }))(LoginModal);
+export default connect(({ user, chat }) => ({ user, chat }))(LoginModal);

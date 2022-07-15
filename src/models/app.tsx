@@ -26,7 +26,6 @@ export default {
 
   effects: {
     async setVisible({ payload, callback }: Effects, { put, call }: Effects) {
-      console.log('effects', payload);
       await put({
         type: 'changeBoolean',
         payload,

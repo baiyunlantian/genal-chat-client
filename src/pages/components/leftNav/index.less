@@ -1,27 +1,35 @@
 .leftMenu {
   position: relative;
   background: rgba(14, 14, 14, 0.7);
-  width: 5rem;
+  width: 15vw;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   padding: 1rem 0;
-  transition: all .3s;
+  transition: all 0.3s;
 
-  .userInfo{
+  .userInfo {
     display: flex;
     flex-direction: column;
     align-items: center;
 
-    .userName{
-      color: #e9e9e9;;
+    .userImg {
+      border: 1px solid white;
+    }
+
+    .userName {
+      color: #e9e9e9;
       font-size: 1.2rem;
       text-align: center;
+      width: 15vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 
-  .toolBtns{
+  .toolBtns {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -30,7 +38,7 @@
       margin: 1rem 0;
     }
 
-    .position{
+    .position {
       position: fixed;
       left: 2rem;
       bottom: 8rem;
@@ -38,12 +46,12 @@
   }
 }
 
-.fadeIn{
+.fadeIn {
   transform: translate(-5rem);
   width: 0;
 }
 
-.fadeOut{
+.fadeOut {
   transform: translate(0);
-  width: 5rem;
+  width: 15vw;
 }

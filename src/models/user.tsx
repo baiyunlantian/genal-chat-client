@@ -14,12 +14,6 @@ export default {
   },
 
   effects: {
-    async setUserInfo({ payload, callback }: Effects, { put, call }: Effects) {
-      await put({
-        type: 'setUserInfo',
-        payload,
-      });
-    },
     async setToken({ payload, callback }: Effects, { put, call }: Effects) {
       await put({
         type: 'setToken',
@@ -42,7 +36,7 @@ export default {
       { type, payload }: { type: string; payload: string },
     ) {
       let _state: any = { ...state };
-      _state['userInfo'] = payload;
+      _state['userInfo'] = payload || {};
       return _state;
     },
   },

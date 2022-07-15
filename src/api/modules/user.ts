@@ -21,22 +21,24 @@ export function logout(): Promise<object> {
   });
 }
 
-export function updatePassword(data: object): Promise<object> {
+export function updatePassword(data): Promise<object> {
   return request('/user/updatePassword', {
     method: 'POST',
     data,
   });
 }
 
-export function getUsersByUserName(name: string): Promise<object> {
-  return request(`/user/findByName?userName=${name}`, {
-    method: 'GET',
+export function getUsersByUserName(data): Promise<object> {
+  return request(`${USER}/findListByUsername`, {
+    method: 'POST',
+    data,
   });
 }
 
 export function uploadAvatar(data: FormData): Promise<object> {
   return request(`${USER}/uploadAvatar`, {
     method: 'POST',
+    requestType: 'form',
     data,
   });
 }

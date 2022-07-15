@@ -13,8 +13,6 @@ const request = extend({
 // 拦截请求
 request.interceptors.request.use((url, options: any) => {
   const headers = {
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
     token: sessionStorage.getItem('access_token'),
   };
 
@@ -22,7 +20,7 @@ request.interceptors.request.use((url, options: any) => {
     url,
     options: {
       ...options,
-      ...headers,
+      headers,
       interceptors: true,
     },
   };

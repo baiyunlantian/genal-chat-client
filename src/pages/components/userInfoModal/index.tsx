@@ -51,7 +51,7 @@ const UserInfoModal = (props: any) => {
     formData.append('file', file);
     formData.append('userId', userInfo.userId);
 
-    uploadAvatar(formData).then((res) => {
+    uploadAvatar(formData).then((res: any) => {
       if (res.code === 200) {
         message.success(res.msg);
         dispatch({
@@ -131,4 +131,6 @@ const UserInfoModal = (props: any) => {
   );
 };
 
-export default connect(({ app, user }: any) => ({ app, user }))(UserInfoModal);
+export default connect(({ app, user, chat }: any) => ({ app, user, chat }))(
+  UserInfoModal,
+);

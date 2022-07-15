@@ -15,6 +15,17 @@ const LeftNav = (props: any) => {
   const { avatar = '', username } = user.userInfo;
   const leftNavVisible = app.leftNavVisible;
 
+  useEffect(() => {
+    const userInfo = JSON.parse(sessionStorage.getItem('userInfo') || '{}');
+
+    if (userInfo && userInfo.userId) {
+      dispatch({
+        type: 'user/setUserInfo',
+        payload: userInfo,
+      });
+    }
+  }, []);
+
   const handleClickAvatar = () => {
     dispatch({
       type: 'app/changeBoolean',
