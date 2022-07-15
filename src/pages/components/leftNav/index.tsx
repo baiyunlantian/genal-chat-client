@@ -7,6 +7,7 @@ import {
   SkinOutlined,
 } from '@ant-design/icons';
 import UserInfoModal from '@/pages/components/userInfoModal';
+import FRIEND from '@/assets/friend.png';
 import styles from './index.less';
 import { BASE_URL } from '@/utils/config';
 
@@ -58,7 +59,7 @@ const LeftNav = (props: any) => {
         <Avatar
           size={45}
           className={styles.userImg}
-          src={`${BASE_URL}${avatar}`}
+          src={avatar ? `${BASE_URL}${avatar}` : FRIEND}
         />
         <div className={styles.userName}>{username}</div>
       </div>

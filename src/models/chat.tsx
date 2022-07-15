@@ -25,7 +25,45 @@ export default {
     },
     setChatList(state: any, { type, payload }: any) {
       let _state = { ...state };
-      _state['chatList'] = payload;
+      _state['chatList'] = payload.map((item) => {
+        let lastMsg = '';
+        if (
+          item.messages &&
+          Array.isArray(item.messages) &&
+          item.messages.length > 0
+        ) {
+          const { content, messageType } =
+            item.messages[item.messages.length - 1];
+          lastMsg = messageType === 'text' ? content : '【图片】';
+        }
+
+        return { ...item, lastMsg };
+      });
+      return _state;
+    },
+    setChatItemLastMsg(state: any, { type, payload }: any) {
+      console.log('setChatItemLastMsg', payload);
+      let _state = { ...state };
+      const { content, messageType, userId, friendId } = payload;
+      let lastMsg = messageType === 'text' ? content : '【图片】';
+      state['chatList'].forEach((item) => {
+        if (item['id'] === userId || item['id'] === friendId) {
+          item['lastMsg'] = lastMsg;
+        }
+      });
+
+      return _state;
+    },
+    removeChatList(state: any, { type, payload }: any) {
+      const { userId, friendId, groupId, chatType } = payload;
+      let _state = { ...state };
+      _state['chatList'] = state['chatList'].filter((item) => {
+        if (chatType === 'friend') {
+          return item.id !== userId && item.id !== friendId;
+        } else {
+          return item.id !== userId && item.id !== groupId;
+        }
+      });
       return _state;
     },
     unshiftChatList(state: any, { type, payload }: any) {
@@ -36,6 +74,11 @@ export default {
     setCurrentChat(state: any, { type, payload }: any) {
       let _state = { ...state };
       _state['currentChat'] = payload;
+      const { messages } = _state['currentChat'];
+
+      if (!Array.isArray(messages)) {
+        _state['currentChat']['messages'] = [];
+      }
       return _state;
     },
     acceptNewMessage(state: any, { type, payload }: any) {
@@ -45,11 +88,11 @@ export default {
         currentChatId = state['currentChat']['id'];
 
       console.log('acceptNewMessage', payload);
-      console.log('_state', _state);
+
       // item['id']--聊天好友的userId
       index = _state['chatList']
         .map((item) => item['id'])
-        .indexOf(payload['friendId']);
+        .indexOf(payload['friendId'] || payload['userId']);
 
       // 将接收到新消息的聊天项置顶
       let topChat = _state['chatList'].splice(index, 1);

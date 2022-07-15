@@ -11,9 +11,11 @@ import styles from './index.less';
 import { connect } from 'umi';
 
 const Header = (props: any) => {
-  const { app, chat, dispatch } = props;
+  const { app, chat, user, dispatch } = props;
   const { leftNavVisible, chatListVisible } = app;
-  const { currentChat } = chat;
+  const { userInfo } = user;
+  const { currentChat, socket } = chat;
+  const { chatType } = currentChat;
 
   const handleToggleLeftNav = (key: string, value: boolean): void => {
     dispatch({
@@ -23,6 +25,20 @@ const Header = (props: any) => {
         value: key === 'chatListVisible' ? !chatListVisible : value,
       },
     });
+  };
+
+  const handleConfirm = () => {
+    let data: any = {
+      userId: userInfo.userId,
+    };
+
+    if (chatType === 'friend') {
+      data['friendId'] = currentChat.id;
+      socket.emit('exitFriend', data);
+    } else {
+      data['groupId'] = currentChat.id;
+      socket.emit('exitGroup', data);
+    }
   };
 
   return (
@@ -47,7 +63,15 @@ const Header = (props: any) => {
 
       <div className={styles.title}>{currentChat.name || ''}</div>
       <div className={styles.leftIcon}>
-        <Popconfirm title="确定要退出该群聊吗" okText="确定" cancelText="取消">
+        <Popconfirm
+          title={`确定要${
+            chatType === 'friend' ? '删除该好友' : '退出该群聊'
+          }吗`}
+          okText="确定"
+          cancelText="取消"
+          onConfirm={handleConfirm}
+          disabled={!chatType}
+        >
           <TeamOutlined className="commonIcon" />
         </Popconfirm>
       </div>
@@ -55,4 +79,4 @@ const Header = (props: any) => {
   );
 };
 
-export default connect(({ app, chat }) => ({ app, chat }))(Header);
+export default connect(({ app, chat, user }) => ({ app, chat, user }))(Header);

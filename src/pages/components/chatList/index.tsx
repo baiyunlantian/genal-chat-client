@@ -30,7 +30,7 @@ const ChatList = (props: any) => {
   const { userInfo } = user;
   const { socket, chatList, currentChat, lastFriendMessage, lastGroupMessage } =
     chat;
-
+  console.log('chatList', chatList);
   // useEffect(()=>{
   //   console.log('lastFriendMessage', lastFriendMessage);
   //   if (lastFriendMessage.userId) {
@@ -137,7 +137,7 @@ const ChatList = (props: any) => {
                 onClick={() => handleToggleChat(item)}
               >
                 <div>{item.name}</div>
-                <div>{item.msg}</div>
+                <div>{item.lastMsg}</div>
               </div>
             </Badge>
           );

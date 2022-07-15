@@ -80,6 +80,24 @@ const Main = (props: any) => {
       }
     });
 
+    // 删除好友
+    socket.on('exitFriend', (res: any) => {
+      console.log('exitFriend', res);
+      if (res.code === 0) {
+        dispatch({
+          type: 'chat/removeChatList',
+          payload: { ...res.data, chatType: 'friend' },
+        });
+        dispatch({
+          type: 'chat/setCurrentChat',
+          payload: { messages: [] },
+        });
+        message.success(res.msg);
+      } else {
+        message.warning(res.msg);
+      }
+    });
+
     // 添加群聊
     socket.on('addGroup', (res: any) => {
       if (res.code === 0) {
@@ -98,14 +116,37 @@ const Main = (props: any) => {
       }
     });
 
+    // 删除群聊
+    socket.on('exitGroup', (res: any) => {
+      console.log('exitGroup', res);
+      if (res.code === 0) {
+        dispatch({
+          type: 'chat/removeChatList',
+          payload: { ...res.data, chatType: 'group' },
+        });
+        dispatch({
+          type: 'chat/setCurrentChat',
+          payload: { messages: [] },
+        });
+        message.success(res.msg);
+      } else {
+        message.warning(res.msg);
+      }
+    });
+
     // 进入群聊组
     socket.on('joinGroup', (res: any) => {
       console.log('joinGroup', res);
     });
 
-    // 接受好友发送消息
+    // （聊天框）监听 接收/发送 消息
     socket.on('friendMessage', (res: any) => {
+      console.log('friendMessage', res);
       if (res.code === 0) {
+        dispatch({
+          type: 'chat/setChatItemLastMsg',
+          payload: res.data,
+        });
         dispatch({
           type: 'chat/acceptNewMessage',
           payload: { ...res.data, chatType: 'friend' },

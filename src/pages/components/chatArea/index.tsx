@@ -14,14 +14,14 @@ const ChatArea = (props: any) => {
   const [message, setMessage] = useState<string>('');
   let chatMsgListRef: any = React.createRef();
 
-  useEffect(() => {
-    console.log('useEffect messages', messages);
-    console.log('chatMsgListRef', chatMsgListRef);
-    if (chatMsgListRef && chatMsgListRef.current && messages.length > 0) {
-      // chatMsgListRef.current.scrollIntoView({ behavior: 'smooth' });
-      chatMsgListRef.current.scrollTop = chatMsgListRef.current.scrollHeight;
-    }
-  }, [messages]);
+  // useEffect(() => {
+  //   console.log('useEffect messages', messages);
+  //   console.log('chatMsgListRef', chatMsgListRef);
+  //   if (chatMsgListRef && chatMsgListRef.current && messages.length > 0) {
+  //     // chatMsgListRef.current.scrollIntoView({ behavior: 'smooth' });
+  //     chatMsgListRef.current.scrollTop = chatMsgListRef.current.scrollHeight;
+  //   }
+  // }, [messages]);
 
   const handleSendMsg = () => {
     let data: any = {
