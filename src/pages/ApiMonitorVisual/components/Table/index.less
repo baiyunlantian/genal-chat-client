@@ -1,0 +1,226 @@
+.table-container {
+  position: relative;
+
+  .interface-monitor-table {
+    position: relative;
+
+    .ant-table {
+      background: unset;
+
+      .ant-table-container {
+        font-family: Source Han Sans CN;
+        font-weight: 400;
+        font-size: 1.1429rem;
+        color: #c4e1ff;
+        background-color: transparent;
+
+        thead {
+          background-image: url('~@/assets/ApiMonitorVisual/Bottom/table_header_bg.png');
+          background-size: 100% 100%;
+          tr {
+            th {
+              padding: 0.5714rem 1.1429rem;
+              font-family: Source Han Sans CN;
+              font-weight: bold;
+              font-size: 1.2857rem;
+              color: #e9f4ff;
+              background-color: transparent;
+              border-bottom: unset;
+            }
+          }
+        }
+
+        tbody {
+          position: relative;
+
+          tr {
+            background-color: #103453;
+
+            &:nth-child(2n) {
+              background-color: #10345378 !important;
+            }
+
+            td {
+              padding: 0.5714rem 1.1429rem;
+              border-top: 0.3571rem solid rgba(0, 0, 0, 0.06);
+              border-bottom: unset;
+
+              &:first-child {
+                position: relative;
+                width: 3.5rem;
+
+                &::before {
+                  content: '';
+                  position: absolute;
+                  left: 0;
+                  top: 0;
+                  background-image: url('~@/assets/ApiMonitorVisual/Bottom/td_icon.png');
+                  background-size: 100% 100%;
+                  width: 14px;
+                  height: 12px;
+                }
+              }
+
+              .btn {
+                color: #3ee5fe;
+                cursor: pointer;
+              }
+            }
+
+            .ant-table-cell-row-hover {
+              background-color: #2a608c;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .ant-pagination {
+    padding: 10px;
+    text-align: right;
+    color: #adc6e1;
+
+    .ant-pagination-item,
+    .ant-pagination-item-link,
+    .ant-select-selector,
+    .ant-pagination-options-quick-jumper > input {
+      border: 1px solid #0095ffd1;
+      background-color: transparent;
+      box-shadow: 0px 0px 5px 1px #2ba8ff99 inset;
+      color: #adc6e1;
+
+      .ant-pagination-item-ellipsis,
+      a {
+        color: #adc6e1;
+      }
+    }
+
+    .ant-pagination-item-active {
+      background: linear-gradient(to bottom, #1f85bc, #094771);
+    }
+  }
+}
+
+.custom-modal {
+  color: #ffffff;
+
+  .ant-modal-content {
+    background: transparent;
+
+    .ant-modal-header {
+      background: transparent;
+      padding: 30px 50px;
+    }
+
+    .ant-modal-footer {
+      padding: 10px 35px;
+    }
+  }
+}
+
+.json-modal {
+  width: 762px !important;
+  height: 768px !important;
+  background-image: url('~@/assets/ApiMonitorVisual/Modal/json_modal_bg.png');
+  background-size: 100% 100%;
+
+  .ant-modal-content {
+    .ant-modal-header {
+      background: transparent;
+      padding: 30px 50px;
+
+      .ant-modal-title {
+        background: linear-gradient(to bottom, #d3f0ff, #ffffff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 18px;
+        font-weight: bold;
+      }
+    }
+
+    .ant-modal-close {
+      top: 25px;
+      right: 15px;
+      color: #009def;
+    }
+
+    .ant-modal-body {
+      height: 580px;
+      margin: 15px auto 0 auto;
+      width: 88%;
+      background: linear-gradient(to bottom right, #263d5333, #011125f5);
+      border-radius: 2px;
+      padding: 30px;
+      overflow: auto;
+    }
+
+    .ant-modal-footer {
+      button {
+        &:first-child {
+          border: 1px solid #0095ffd1;
+          background-color: transparent;
+          box-shadow: 0px 0px 5px 1px #2ba8ff99 inset;
+          color: #adc6e1;
+        }
+        &:last-child {
+          border: 1px solid #0095ffd1;
+          color: #cce0f5;
+          background: linear-gradient(to bottom, #1f85bc, #094771);
+        }
+      }
+    }
+  }
+}
+
+.log-modal {
+  width: 536px !important;
+  height: 698px !important;
+  background-image: url('~@/assets/ApiMonitorVisual/Modal/log_modal_bg.png');
+  background-size: 100% 100%;
+
+  .ant-modal-header {
+    background: transparent;
+    padding: 30px 50px;
+
+    .ant-modal-title {
+      background: linear-gradient(to bottom, #ffd3df, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  }
+
+  .ant-modal-close {
+    top: 25px;
+    right: 15px;
+    color: #e1adad;
+  }
+
+  .ant-modal-body {
+    height: 530px;
+    margin: 15px auto 0 auto;
+    width: 88%;
+    background: #3a1c1c;
+    border-radius: 2px;
+    padding: 30px;
+    overflow: auto;
+  }
+
+  .ant-modal-footer {
+    button {
+      &:first-child {
+        border: 1px solid #f55b5bd1;
+        background-color: transparent;
+        box-shadow: 0px 0px 5px 1px #b3292999 inset;
+        color: #ef7070;
+      }
+      &:last-child {
+        border: 1px solid #a33f3feb;
+        color: #edc8c8;
+        background: linear-gradient(to bottom, #a22e2e, #472222);
+      }
+    }
+  }
+}

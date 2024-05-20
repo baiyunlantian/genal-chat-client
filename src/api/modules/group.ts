@@ -15,3 +15,11 @@ export function getGroupsMessage(params: object): Promise<object> {
     params,
   });
 }
+
+// userListWithinGroup
+export function getUserListByGroupId(params: object): Promise<object> {
+  return request(`${GROUP}/userListWithinGroup`, {
+    method: 'GET',
+    params,
+  });
+}

@@ -11,6 +11,8 @@ export default {
       messages: [],
     },
     chatList: [],
+    userList: [],
+    userAvatarMap: new Map(),
     lastFriendMessage: {},
     lastGroupMessage: {},
   },
@@ -42,7 +44,6 @@ export default {
       return _state;
     },
     setChatItemLastMsg(state: any, { type, payload }: any) {
-      console.log('setChatItemLastMsg', payload);
       let _state = { ...state };
       const { content, messageType, userId, friendId } = payload;
       let lastMsg = messageType === 'text' ? content : '【图片】';
@@ -68,7 +69,10 @@ export default {
     },
     unshiftChatList(state: any, { type, payload }: any) {
       let _state = { ...state };
-      _state['chatList'].unshift(payload);
+      let ids = _state['chatList'].map((item) => item.id);
+      if (ids.includes(payload) === false) {
+        _state['chatList'].unshift(payload);
+      }
       return _state;
     },
     setCurrentChat(state: any, { type, payload }: any) {
@@ -84,15 +88,15 @@ export default {
     acceptNewMessage(state: any, { type, payload }: any) {
       let _state = { ...state },
         index = 0,
-        chatType = payload.chatType,
+        acceptField = payload.chatType === 'friend' ? 'friendId' : 'groupId',
         currentChatId = state['currentChat']['id'];
 
-      console.log('acceptNewMessage', payload);
+      // console.log('acceptNewMessage', payload);
 
       // item['id']--聊天好友的userId
       index = _state['chatList']
         .map((item) => item['id'])
-        .indexOf(payload['friendId'] || payload['userId']);
+        .indexOf(payload[acceptField] || payload['userId']);
 
       // 将接收到新消息的聊天项置顶
       let topChat = _state['chatList'].splice(index, 1);
@@ -113,10 +117,32 @@ export default {
        * */
       if (
         currentChatId === payload['userId'] ||
-        currentChatId === payload['friendId']
+        currentChatId === payload[acceptField]
       ) {
         _state['currentChat']['messages'].push(payload);
       }
+
+      return _state;
+    },
+    setUserList(state: any, { type, payload }: any) {
+      let _state = { ...state };
+      let ids: Array<String> = [];
+      (_state['userList'] || []).forEach((item) => {
+        if (_state['userAvatarMap'].has(item.userId) === false) {
+          _state['userAvatarMap'].set(item.userId, item.avatar);
+        }
+        ids.push(item.userId);
+      });
+
+      (payload || []).forEach((item) => {
+        if (ids.includes(item.userId) === false) {
+          _state['userList'].push(item);
+        }
+
+        if (_state['userAvatarMap'].has(item.userId) === false) {
+          _state['userAvatarMap'].set(item.userId, item.avatar);
+        }
+      });
 
       return _state;
     },

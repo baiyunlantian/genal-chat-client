@@ -30,7 +30,6 @@ const ChatList = (props: any) => {
   const { userInfo } = user;
   const { socket, chatList, currentChat, lastFriendMessage, lastGroupMessage } =
     chat;
-  console.log('chatList', chatList);
   // useEffect(()=>{
   //   console.log('lastFriendMessage', lastFriendMessage);
   //   if (lastFriendMessage.userId) {
@@ -61,10 +60,17 @@ const ChatList = (props: any) => {
   };
 
   const handleToggleChat = (chatInfo: any) => {
-    socket.emit('joinFriendSocket', {
-      userId: userInfo.userId,
-      friendId: chatInfo.id,
-    });
+    if (chatInfo.chatType === 'friend') {
+      socket.emit('joinFriendSocket', {
+        userId: userInfo.userId,
+        friendId: chatInfo.id,
+      });
+    } else {
+      socket.emit('joinGroupSocket', {
+        userId: userInfo.userId,
+        groupId: chatInfo.id,
+      });
+    }
 
     dispatch({
       type: 'chat/setCurrentChat',

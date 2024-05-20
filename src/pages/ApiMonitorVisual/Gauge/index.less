@@ -1,0 +1,68 @@
+.-p-ApiMonitor {
+  .-p-Monitor {
+    .Monitor_detail {
+      .gauge_container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+
+        .gauge_echarts {
+          position: relative;
+          width: 15.3714rem;
+          height: 100%;
+
+          &::before {
+            content: '';
+            position: absolute;
+            left: 9%;
+            top: 28%;
+            z-index: 9;
+            background-image: url('~@/assets/ApiMonitorVisual/Monitor/gauge_bg.png');
+            background-size: 100% 100%;
+            width: 12.7143rem;
+            height: 7rem;
+          }
+
+          .pointer {
+            position: absolute;
+            left: 48.5%;
+            top: 31.5%;
+            z-index: 10;
+            background-image: url('~@/assets/ApiMonitorVisual/Monitor/pointer.png');
+            background-size: 100% 100%;
+            width: 2.0714rem;
+            height: 4.9286rem;
+            transform: rotate(-90deg);
+            transform-origin: bottom;
+          }
+        }
+
+        .present {
+          width: 15rem;
+          background-image: url('~@/assets/ApiMonitorVisual/Monitor/option_arrow_bg.png');
+          background-size: 100% 100%;
+          padding: 0.5rem 0.6rem;
+          text-align: center;
+          margin-right: 0.7143rem;
+
+          .label {
+            color: #c4e1ff;
+            font-family: Source Han Sans CN;
+            font-size: 1rem;
+            line-height: 1.8571rem;
+          }
+          .gap-icon {
+            color: #7a7a7a;
+            letter-spacing: 1px;
+          }
+          .value {
+            color: #51d5da;
+            font-weight: bold;
+            font-size: 1.2143rem;
+          }
+        }
+      }
+    }
+  }
+}

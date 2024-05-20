@@ -8,20 +8,17 @@ import styles from './index.less';
 
 const ChatArea = (props: any) => {
   const { dispatch, user, chat } = props;
-  const { socket, currentChat } = chat;
+  const { socket, currentChat, userAvatarMap } = chat;
   const { avatar, id: chatId, messages, chatType } = currentChat;
   const { userInfo } = user;
   const [message, setMessage] = useState<string>('');
   let chatMsgListRef: any = React.createRef();
 
-  // useEffect(() => {
-  //   console.log('useEffect messages', messages);
-  //   console.log('chatMsgListRef', chatMsgListRef);
-  //   if (chatMsgListRef && chatMsgListRef.current && messages.length > 0) {
-  //     // chatMsgListRef.current.scrollIntoView({ behavior: 'smooth' });
-  //     chatMsgListRef.current.scrollTop = chatMsgListRef.current.scrollHeight;
-  //   }
-  // }, [messages]);
+  useEffect(() => {
+    if (messages.length > 0) {
+      chatMsgListRef.current.scrollTop = chatMsgListRef.current.scrollHeight;
+    }
+  }, [messages.length]);
 
   const handleSendMsg = () => {
     let data: any = {
@@ -35,7 +32,7 @@ const ChatArea = (props: any) => {
       socket.emit('friendMessage', data);
     } else {
       data['groupId'] = chatId;
-      socket.emit('friendMessage', data);
+      socket.emit('groupMessage', data);
     }
     setMessage('');
   };
@@ -49,10 +46,14 @@ const ChatArea = (props: any) => {
           if (item.userId === userInfo.userId) {
             avatarUrl = `${BASE_URL}${userInfo.avatar}`;
           } else {
-            avatarUrl = avatar ? `${BASE_URL}${avatar}` : Friend;
+            if (userAvatarMap.has(item.userId)) {
+              avatarUrl = `${BASE_URL}${userAvatarMap.get(item.userId)}`;
+            } else {
+              avatarUrl = Friend;
+            }
           }
 
-          return (
+          return item.chatType !== 'joinGroup' ? (
             <div
               className={`${
                 item.userId === userInfo.userId ? styles.right : styles.left
@@ -64,6 +65,11 @@ const ChatArea = (props: any) => {
                 <div>{moment(item.time).format('YYYY/MM/DD HH:mm:ss')}</div>
               </div>
               <div className={styles.msg}>{item.content}</div>
+            </div>
+          ) : (
+            <div className={styles.newMember} key={index}>
+              <span>{item.username}</span>
+              加入群聊
             </div>
           );
         })}

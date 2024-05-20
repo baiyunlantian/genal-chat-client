@@ -1,0 +1,140 @@
+.-p-Monitor {
+  .Monitor_option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 7.857rem;
+    padding: 1rem 0 1.5rem 1.357rem;
+    margin-bottom: 0.5rem;
+    color: #c4e1ff;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('~@/assets/ApiMonitorVisual/Monitor/option_bg.png');
+      background-size: 100% 100%;
+    }
+
+    .left {
+      width: 5.428rem;
+      height: 5.428rem;
+
+      .icon {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .center {
+      width: 11.5714rem;
+      height: 4.8571rem;
+      padding: 0.6rem 1rem;
+      background-image: url('~@/assets/ApiMonitorVisual/Monitor/option_conter_bg.png');
+      background-size: 100% 100%;
+
+      .col {
+        font-family: Source Han Sans CN;
+        font-size: 1rem;
+        line-height: 1.8571rem;
+      }
+
+      .value {
+        position: relative;
+      }
+    }
+
+    .right {
+      width: 9.5714rem;
+      height: 4.8571rem;
+      margin-right: 2rem;
+
+      .item {
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        background-image: url('~@/assets/ApiMonitorVisual/Monitor/option_arrow_bg.png');
+        background-size: 100% 100%;
+        margin-bottom: 0.3571rem;
+
+        .value {
+          font-family: Source Han Sans CN;
+          font-weight: bold;
+          font-size: 1.5714rem;
+          color: #00f5ad;
+          opacity: 0.8;
+        }
+      }
+    }
+
+    .unit {
+      margin-left: 0.6428rem;
+    }
+
+    .vertical-center {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .bold-font {
+    font-family: Alibaba PuHuiTi;
+    font-weight: bold;
+    font-size: 1.8571rem;
+    color: #ffffff;
+    line-height: 1.8571rem;
+    background: linear-gradient(
+      -1deg,
+      #a6c6fa 0.4150390625%,
+      #deebfd 39.9169921875%,
+      #ffffff 99.31640625%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .Monitor_options {
+    position: relative;
+  }
+
+  .Monitor_detail {
+    background-image: url('~@/assets/ApiMonitorVisual/Monitor/detail_bg.png');
+    background-size: 100% 100%;
+
+    .Monitor_option {
+      &::after {
+        background-image: unset;
+      }
+    }
+
+    .Monitor_select_month {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.375rem 3rem 2.2rem;
+      background-image: url('~@/assets/ApiMonitorVisual/Monitor/select_month_bg.png');
+      background-size: 100% 100%;
+
+      .left {
+        font-size: 1.4285rem;
+      }
+
+      .right {
+        .select-month {
+          position: relative;
+          border: 1px solid #0095ffd1;
+          background-color: transparent;
+          box-shadow: 0px 0px 5px 1px #2ba8ff99 inset;
+
+          input {
+            color: #c4e1ff;
+          }
+        }
+      }
+    }
+  }
+}

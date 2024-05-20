@@ -18,6 +18,7 @@ export default {
   namespace: 'app',
 
   state: {
+    isFull: false,
     leftNavVisible: true,
     userInfoModalVisible: false,
     chatListVisible: false,
@@ -38,6 +39,12 @@ export default {
       state = Object,
       { type, payload }: { type: string; payload: ChangeBoolean },
     ) {
+      const { key, value } = payload;
+      let _state: any = { ...state };
+      _state[key] = value;
+      return _state;
+    },
+    setFullScreen(state = Object, { type, payload }) {
       const { key, value } = payload;
       let _state: any = { ...state };
       _state[key] = value;
