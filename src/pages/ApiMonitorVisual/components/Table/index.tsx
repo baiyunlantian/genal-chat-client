@@ -1,14 +1,16 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Table, Pagination, Modal } from 'antd';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
+import { Table, Pagination, Modal, Message } from 'antd';
 import type { FC } from 'react';
 import './index.less';
 import moment from 'moment';
+import CopyJS from 'copy-to-clipboard';
 
 type Props = {
   pagination?: boolean;
+  dataSource: [];
 };
 
-const TableComponent: FC<Props> = ({ pagination = false }) => {
+const TableComponent: FC<Props> = ({ pagination = false, dataSource = [] }) => {
   const columns = [
     {
       title: '',
@@ -86,17 +88,8 @@ const TableComponent: FC<Props> = ({ pagination = false }) => {
       ),
     },
   ];
-  const data = new Array(20).fill(0).map((item) => {
-    return {
-      time: moment().format('YYYY-MM-DD HH:mm:ss'),
-      direction: Math.random() > 0.5 ? '南向接口' : '北向接口',
-      name: 'pcpasf',
-      system: 'pcpasf',
-      status: Math.random() > 0.5 ? '0' : '1',
-      timeConsuming: Math.random().toFixed(2),
-      response: Math.random() > 0.5 ? '0' : '1',
-    };
-  });
+
+  const copyRef = useRef(null);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [modalType, setModalType] = useState('json');
@@ -109,8 +102,16 @@ const TableComponent: FC<Props> = ({ pagination = false }) => {
   };
 
   const handleOk = (record, modalType) => {
-    console.log('record', record);
-    console.log('modalType', modalType);
+    try {
+      CopyJS(copyRef.current.innerText);
+      Message.success({
+        content: '复制成功!',
+      });
+    } catch (e) {
+      Message.success({
+        content: '复制失败!',
+      });
+    }
   };
 
   const handleCancel = (record, modalType) => {
@@ -129,8 +130,16 @@ const TableComponent: FC<Props> = ({ pagination = false }) => {
       <Table
         className="interface-monitor-table"
         columns={columns}
-        dataSource={data}
+        dataSource={dataSource}
         pagination={false}
+        scroll={
+          pagination === true
+            ? {
+                scrollToFirstRowOnChange: true,
+                y: 600,
+              }
+            : {}
+        }
       />
 
       {pagination && (
@@ -154,7 +163,7 @@ const TableComponent: FC<Props> = ({ pagination = false }) => {
         onCancel={handleCancel}
         okText="复制"
       >
-        <div className="modal-content">
+        <div className="modal-content" ref={copyRef}>
           a
           <br />
           d

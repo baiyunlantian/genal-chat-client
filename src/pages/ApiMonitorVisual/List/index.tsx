@@ -3,6 +3,9 @@ import { Button, Form, Input, message, Row, Select, DatePicker } from 'antd';
 import './index.less';
 import InterfaceMonitorTable from '../components/Table/index';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
+import moment from 'moment';
+import { history } from 'umi';
+import GoBackIcon from '@/assets/ApiMonitorVisual/List/goBack_icon.png';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -10,10 +13,31 @@ const { RangePicker } = DatePicker;
 const List = () => {
   const [form] = Form.useForm();
 
+  const data = new Array(20).fill(0).map((item) => {
+    return {
+      time: moment().format('YYYY-MM-DD HH:mm:ss'),
+      direction: Math.random() > 0.5 ? '南向接口' : '北向接口',
+      name: 'pcpasf',
+      system: 'pcpasf',
+      status: Math.random() > 0.5 ? '0' : '1',
+      timeConsuming: Math.random().toFixed(2),
+      response: Math.random() > 0.5 ? '0' : '1',
+    };
+  });
+
+  const goBack = () => {
+    console.log('click goBack');
+    history.push('/');
+  };
+
   return (
     <div className="-p-ApiMonitorList">
       <div className="header">
         <span className="title">产业虚拟电厂接口服务检测可视化</span>
+        <div className="goBack-btn" onClick={goBack}>
+          <img src={GoBackIcon} />
+          <span>返回</span>
+        </div>
       </div>
 
       <div className="main">
@@ -52,7 +76,7 @@ const List = () => {
         </Form>
 
         <div className="list-container">
-          <InterfaceMonitorTable pagination={true} />
+          <InterfaceMonitorTable pagination={true} dataSource={data} />
         </div>
       </div>
     </div>

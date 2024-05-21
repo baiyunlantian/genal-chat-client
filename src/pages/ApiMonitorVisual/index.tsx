@@ -6,6 +6,8 @@ import Monitor from './MonitorCopy';
 import Bottom from './Bottom';
 import React, { useEffect } from 'react';
 import { connect } from 'umi';
+import BgImg from '@/assets/bg.png';
+import TitleImg from '@/assets/title.png';
 
 const APIMonitor = (props) => {
   const { app, dispatch } = props;
