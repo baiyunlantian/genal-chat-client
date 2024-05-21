@@ -4,7 +4,7 @@ import {
   ResponseError,
   ResponseInterceptor,
 } from 'umi-request';
-import { message } from 'antd';
+import { Message } from 'antd';
 
 const request = extend({
   timeout: 1000 * 60,
@@ -12,15 +12,10 @@ const request = extend({
 
 // 拦截请求
 request.interceptors.request.use((url, options: any) => {
-  const headers = {
-    token: sessionStorage.getItem('access_token'),
-  };
-
   return {
     url,
     options: {
       ...options,
-      headers,
       interceptors: true,
     },
   };
@@ -29,8 +24,10 @@ request.interceptors.request.use((url, options: any) => {
 // 拦截响应
 request.interceptors.response.use(async (response, options) => {
   const { code, msg } = await response.clone().json();
-  if (code !== 200) {
-    message.error(msg || '服务异常');
+  if (code !== 0) {
+    Message.error({
+      content: msg || '服务异常',
+    });
   }
   return response;
 });

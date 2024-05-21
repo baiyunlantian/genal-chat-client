@@ -4,27 +4,50 @@ import Full from './Full';
 import './index.less';
 import Monitor from './MonitorCopy';
 import Bottom from './Bottom';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'umi';
-import BgImg from '@/assets/bg.png';
-import TitleImg from '@/assets/title.png';
+import { getInterfaceInfoCount } from '@/api';
 
 const APIMonitor = (props) => {
   const { app, dispatch } = props;
   const isFull = app.isFull;
+  const [infoCount, setInfoCount] = useState({
+    south: {
+      interNum: 0,
+      normalInterNum: 0,
+      errorInterNum: 0,
+      aveTime: 0,
+      fastestTime: 0,
+      slowestTime: 0,
+      monthlyCount: 0,
+      monthlySucceedCount: 0,
+      monthlyErrorCount: 0,
+    },
+    north: {
+      interNum: 0,
+      normalInterNum: 0,
+      errorInterNum: 0,
+      aveTime: 0,
+      fastestTime: 0,
+      slowestTime: 0,
+      monthlyCount: 0,
+      monthlySucceedCount: 0,
+      monthlyErrorCount: 0,
+    },
+  });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (document.body.clientHeight > 3000) {
-      const element = document.getElementById('-p-tieTa');
-      element?.requestFullscreen();
-      dispatch({
-        type: 'app/setFullScreen',
-        payload: {
-          key: 'isFull',
-          value: true,
-        },
+    setLoading(true);
+    getInterfaceInfoCount()
+      .then((res) => {
+        if (res.code === 0) {
+          setInfoCount(res.data);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
       });
-    }
   }, []);
 
   return (
@@ -38,13 +61,21 @@ const APIMonitor = (props) => {
         <Row>
           <div className="top">
             <div className="left">
-              <Monitor />
+              <Monitor
+                direction="北"
+                loading={loading}
+                infoCount={infoCount.north}
+              />
             </div>
             <div className="content">
               <VPS />
             </div>
             <div className="right">
-              <Monitor />
+              <Monitor
+                direction="南"
+                loading={loading}
+                infoCount={infoCount.south}
+              />
             </div>
           </div>
 

@@ -1,20 +1,34 @@
-import TCharts from '@/pages/ApiMonitorVisual/components/TCharts';
 import EChartsReact from 'echarts-for-react';
 import * as echarts from 'echarts';
 import type { FC } from 'react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { getFontSize } from '../utils';
 
 type Props = {
-  data?: number[];
-  color?: string;
+  dataSource: {};
 };
 
-const Echarts: FC<Props> = ({ data = [], color = '#42C7FF' }) => {
+const Echarts: FC<Props> = ({ dataSource = {} }) => {
+  const [xAxis, setXAxis] = useState([0]);
+  const [barData, setBarData] = useState(['1']);
+
+  useEffect(() => {
+    let _xAxis = [],
+      _barData = [];
+
+    Object.keys(dataSource).forEach((key) => {
+      _xAxis.push(key.split('-')[2] || '-');
+      _barData.push(dataSource[key] || 0);
+    });
+
+    setXAxis(_xAxis);
+    setBarData(_barData);
+  }, [dataSource]);
+
   const option = {
-    color,
     tooltip: {
       trigger: 'axis',
+      formatter: '{b}<br/>{c}次',
     },
     grid: {
       width: '85%',
@@ -27,7 +41,7 @@ const Echarts: FC<Props> = ({ data = [], color = '#42C7FF' }) => {
     xAxis: {
       type: 'category',
       boundaryGap: true,
-      data: new Array(30).fill(1).map((item, index) => index + 1),
+      data: xAxis,
       axisLabel: {
         color: '#6CA3CF',
         fontSize: getFontSize(0.8),
@@ -72,9 +86,7 @@ const Echarts: FC<Props> = ({ data = [], color = '#42C7FF' }) => {
     },
     series: [
       {
-        data: new Array(30).fill(1).map((item) => {
-          return Math.ceil(Math.random() * 100);
-        }),
+        data: barData,
         type: 'bar',
         barWidth: 4,
         lineStyle: {

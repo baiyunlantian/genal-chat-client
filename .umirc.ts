@@ -31,7 +31,7 @@ export default defineConfig({
   fastRefresh: {},
   proxy: {
     '/api': {
-      target: 'http://localhost:3025',
+      target: 'http://10.8.0.129:8080',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },

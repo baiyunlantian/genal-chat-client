@@ -2,71 +2,78 @@ import icon1Img from '@/assets/ApiMonitorVisual/Monitor/icon1.png';
 import icon2Img from '@/assets/ApiMonitorVisual/Monitor/icon2.png';
 import icon3Img from '@/assets/ApiMonitorVisual/Monitor/icon3.png';
 
-import { Col, Row, DatePicker, InputNumber } from 'antd';
+import { Col, Row, DatePicker, InputNumber, Spin } from 'antd';
 import { CalendarOutlined } from '@ant-design/icons/lib';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import './index.less';
-import { useMonitorService } from './service';
 import BarEcharrts from './Echarts';
 import GaugeContent from '../Gauge/index';
-import { useSelector } from 'umi';
 import moment from 'moment';
 
-const Monitor = () => {
-  const [monitorOptionsData, setMonitorOptionsData] = useState({
-    apiTotal: 42,
-    normal: 23,
-    abnormal: 12,
-    averageTime: 1.36,
-    fastest: 0.33,
-    slowest: 2.21,
-    interactiveTotal: 3642,
-    success: 2344,
-    fail: 1232,
-  });
+import { getInterfaceMonthCount } from '@/api';
+
+const Monitor = (props) => {
+  const { direction, loading, infoCount } = props;
   const [month, setMonth] = useState(moment().format('YYYY-MM'));
-  const [successPresent, setSuccessPresent] = useState(0);
+  const [ratePercent, setRatePercent] = useState(0);
+  const [barMonthCurve, setBarMonthCurve] = useState({});
+  const [echartsLoading, setEchartsLoading] = useState(false);
 
   useEffect(() => {
-    const mock = Number((Math.random() * 100).toFixed(1));
-    setSuccessPresent(mock);
+    let params = {
+      month,
+      direction: direction === '北' ? '1' : '0',
+    };
+
+    setEchartsLoading(true);
+    getInterfaceMonthCount(params)
+      .then((res) => {
+        if (res.code === 0) {
+          const { rate = 0, monthCurve = {} } = res.data;
+          setRatePercent(rate);
+          setBarMonthCurve(monthCurve);
+        }
+      })
+      .finally(() => {
+        setEchartsLoading(false);
+      });
   }, [month]);
 
   const monitorOptions = [
     {
-      leftText: '北向接口总数量',
+      leftText: `${direction}向接口总数量`,
       unit: '个',
-      leftProp: 'apiTotal',
+      leftProp: 'interNum',
       rtText: '正常',
-      rtProp: 'normal',
+      rtProp: 'normalInterNum',
       rtColor: '#00F5AD',
       rbText: '异常',
-      rbProp: 'abnormal',
+      rbProp: 'errorInterNum',
       rbColor: '#FA5353',
       iconUrl: icon1Img,
     },
     {
-      leftText: '北向平均用时',
+      leftText: `${direction}向平均用时`,
       unit: '秒',
-      leftProp: 'averageTime',
+      leftProp: 'aveTime',
       rtText: '最快',
-      rtProp: 'fastest',
+      rtProp: 'fastestTime',
       rtColor: '#4DBAFF',
       rbText: '最慢',
-      rbProp: 'slowest',
+      rbProp: 'slowestTime',
       rbColor: '#C57EF3',
       iconUrl: icon2Img,
     },
     {
-      leftText: '北向月数据交互次数',
+      leftText: `${direction}向月数据交互次数`,
       unit: '次',
-      leftProp: 'interactiveTotal',
+      leftProp: 'monthlyCount',
       rtText: '成功',
-      rtProp: 'success',
+      rtProp: 'monthlySucceedCount',
       rtColor: '#42EBFF',
       rbText: '失败',
-      rbProp: 'fail',
+      rbProp: 'monthlyErrorCount',
       rbColor: '#FAB965',
       iconUrl: icon3Img,
     },
@@ -83,7 +90,7 @@ const Monitor = () => {
             <div className="col">{item.leftText}</div>
             <div className="col">
               <span className="value bold-font">
-                {monitorOptionsData[item.leftProp]}
+                {infoCount[item.leftProp]}
               </span>
               <span className="unit">{item.unit}</span>
             </div>
@@ -93,7 +100,7 @@ const Monitor = () => {
               <div className="col">{item.rtText}</div>
               <div className="col vertical-center">
                 <span className="value" style={{ color: item.rtColor }}>
-                  {monitorOptionsData[item.rtProp]}
+                  {infoCount[item.rtProp]}
                 </span>
                 <span className="unit">{item.unit}</span>
               </div>
@@ -102,7 +109,7 @@ const Monitor = () => {
               <div className="col">{item.rbText}</div>
               <div className="col vertical-center">
                 <span className="value" style={{ color: item.rbColor }}>
-                  {monitorOptionsData[item.rbProp]}
+                  {infoCount[item.rbProp]}
                 </span>
                 <span className="unit">{item.unit}</span>
               </div>
@@ -120,11 +127,15 @@ const Monitor = () => {
   return (
     <div className="-p-Monitor">
       <div className="Monitor_options">
-        {handleRenderMonitorOptions(monitorOptions.slice(0, 2))}
+        <Spin spinning={loading}>
+          {handleRenderMonitorOptions(monitorOptions.slice(0, 2))}
+        </Spin>
       </div>
 
       <div className="Monitor_detail">
-        {handleRenderMonitorOptions(monitorOptions.slice(2, 3))}
+        <Spin spinning={loading}>
+          {handleRenderMonitorOptions(monitorOptions.slice(2, 3))}
+        </Spin>
 
         <div className="Monitor_select_month">
           <div className="left bold-font">月内每日交互调用情况</div>
@@ -146,8 +157,10 @@ const Monitor = () => {
           </div>
         </div>
 
-        <BarEcharrts />
-        <GaugeContent value={successPresent} />
+        <Spin spinning={echartsLoading}>
+          <BarEcharrts dataSource={barMonthCurve} />
+          <GaugeContent value={ratePercent} />
+        </Spin>
       </div>
     </div>
   );

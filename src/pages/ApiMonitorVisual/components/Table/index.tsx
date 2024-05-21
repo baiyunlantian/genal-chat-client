@@ -7,10 +7,17 @@ import CopyJS from 'copy-to-clipboard';
 
 type Props = {
   pagination?: boolean;
+  total?: number;
+  onChangePagination?: Function;
   dataSource: [];
 };
 
-const TableComponent: FC<Props> = ({ pagination = false, dataSource = [] }) => {
+const TableComponent: FC<Props> = ({
+  pagination = false,
+  dataSource = [],
+  onChangePagination,
+  total,
+}) => {
   const columns = [
     {
       title: '',
@@ -19,8 +26,8 @@ const TableComponent: FC<Props> = ({ pagination = false, dataSource = [] }) => {
     },
     {
       title: '时间',
-      dataIndex: 'time',
-      key: 'time',
+      dataIndex: 'occurTime',
+      key: 'occurTime',
       align: 'left',
     },
     {
@@ -31,39 +38,38 @@ const TableComponent: FC<Props> = ({ pagination = false, dataSource = [] }) => {
     },
     {
       title: '接口名称',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'interfaceName',
+      key: 'interfaceName',
       align: 'center',
     },
     {
       title: '交互方平台/系统',
-      dataIndex: 'system',
-      key: 'system',
+      dataIndex: 'platform',
+      key: 'platform',
       align: 'center',
     },
     {
       title: '接口调用结果',
-      dataIndex: 'status',
-      key: 'status',
+      dataIndex: 'resultState',
+      key: 'resultState',
       align: 'center',
       render: (text) => (
-        <span style={{ color: text === '0' ? '#FFF605' : '#1EF2B7' }}>
-          {text === '0' ? '失败' : '成功'}
+        <span style={{ color: text === '失败' ? '#FFF605' : '#1EF2B7' }}>
+          {text}
         </span>
       ),
     },
     {
       title: '耗时(秒)',
-      dataIndex: 'timeConsuming',
-      key: 'timeConsuming',
+      dataIndex: 'consumeTime',
+      key: 'consumeTime',
       align: 'center',
     },
     {
       title: '调用反馈信息',
-      dataIndex: 'response',
-      key: 'response',
+      dataIndex: 'feedback',
+      key: 'feedback',
       align: 'center',
-      render: (text) => <span>{text === '0' ? '连接超时' : '操作成功'}</span>,
     },
     {
       title: '接口JSON',
@@ -93,36 +99,39 @@ const TableComponent: FC<Props> = ({ pagination = false, dataSource = [] }) => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [modalType, setModalType] = useState('json');
+  const [modalContent, setModalContent] = useState('');
 
   const handleShowModal = (record, modalType) => {
+    if (modalType === 'json') {
+      setModalContent(record.inputInfo);
+    } else {
+      setModalContent(record.errorInfo);
+    }
     setModalVisible(true);
     setModalType(modalType);
-    console.log('record', record);
-    console.log('modalType', modalType);
   };
 
-  const handleOk = (record, modalType) => {
+  const handleOk = () => {
     try {
       CopyJS(copyRef.current.innerText);
       Message.success({
         content: '复制成功!',
       });
     } catch (e) {
-      Message.success({
+      Message.error({
         content: '复制失败!',
       });
     }
   };
 
-  const handleCancel = (record, modalType) => {
-    console.log('record', record);
-    console.log('modalType', modalType);
+  const handleCancel = () => {
     setModalVisible(false);
   };
 
   const changePagination = (page, pageSize) => {
     console.log('page', page);
     console.log('pageSize', pageSize);
+    onChangePagination(page, pageSize);
   };
 
   return (
@@ -145,7 +154,7 @@ const TableComponent: FC<Props> = ({ pagination = false, dataSource = [] }) => {
       {pagination && (
         <Pagination
           showLessItems={false}
-          total={25}
+          total={total}
           showSizeChanger
           showQuickJumper
           showTotal={(total) => `总共${total}次记录`}
@@ -164,78 +173,7 @@ const TableComponent: FC<Props> = ({ pagination = false, dataSource = [] }) => {
         okText="复制"
       >
         <div className="modal-content" ref={copyRef}>
-          a
-          <br />
-          d
-          <br />
-          b
-          <br />
-          f
-          <br />
-          h
-          <br />
-          j
-          <br />
-          n
-          <br />
-          j
-          <br />
-          u
-          <br />
-          d
-          <br />
-          t
-          <br />
-          c
-          <br />
-          q a
-          <br />
-          d
-          <br />
-          b
-          <br />
-          f
-          <br />
-          h
-          <br />
-          j
-          <br />
-          n
-          <br />
-          j
-          <br />
-          u
-          <br />
-          d
-          <br />
-          t
-          <br />
-          c
-          <br />
-          q a
-          <br />
-          d
-          <br />
-          b
-          <br />
-          f
-          <br />
-          h
-          <br />
-          j
-          <br />
-          n
-          <br />
-          j
-          <br />
-          u
-          <br />
-          d
-          <br />
-          t
-          <br />
-          c
-          <br />q
+          {modalContent}
         </div>
       </Modal>
     </div>

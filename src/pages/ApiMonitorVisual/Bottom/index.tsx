@@ -1,27 +1,44 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './index.less';
 import InterfaceMonitorTable from '../components/Table/index';
-import moment from 'moment';
-import BottomBgImg from '@/assets/ApiMonitorVisual/Bottom/bottom_bg.png';
+import { getInterfaceInfoListByPage } from '@/api';
+import { Spin } from 'antd';
+import { history } from 'umi';
 
 const Bottom = () => {
-  const data = new Array(4).fill(0).map((item) => {
-    return {
-      time: moment().format('YYYY-MM-DD HH:mm:ss'),
-      direction: Math.random() > 0.5 ? '南向接口' : '北向接口',
-      name: 'pcpasf',
-      system: 'pcpasf',
-      status: Math.random() > 0.5 ? '0' : '1',
-      timeConsuming: Math.random().toFixed(2),
-      response: Math.random() > 0.5 ? '0' : '1',
+  const [loading, setLoading] = useState(false);
+  const [tableSource, setTableSource] = useState([]);
+
+  useEffect(() => {
+    let params = {
+      pageNum: 1,
+      pageSize: 4,
     };
-  });
+
+    setLoading(true);
+    getInterfaceInfoListByPage(params)
+      .then((res) => {
+        if (res.code === 0) {
+          const { datas = [] } = res.data;
+          setTableSource(datas);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  const handleJumpToList = () => {
+    history.push('/list');
+  };
 
   return (
-    <div className="bottom">
+    <div className="bottom" onClick={handleJumpToList}>
       <div className="left">南北双向接口调用监测</div>
       <div className="right">
-        <InterfaceMonitorTable dataSource={data} />
+        <Spin spinning={loading}>
+          <InterfaceMonitorTable dataSource={tableSource} />
+        </Spin>
       </div>
     </div>
   );

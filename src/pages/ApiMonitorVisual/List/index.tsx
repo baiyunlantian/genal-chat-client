@@ -2,10 +2,11 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Form, Input, message, Row, Select, DatePicker } from 'antd';
 import './index.less';
 import InterfaceMonitorTable from '../components/Table/index';
-import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { history } from 'umi';
 import GoBackIcon from '@/assets/ApiMonitorVisual/List/goBack_icon.png';
+import { getInterfaceInfoListByPage } from '@/api';
+import { Spin } from 'antd';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -13,21 +14,56 @@ const { RangePicker } = DatePicker;
 const List = () => {
   const [form] = Form.useForm();
 
-  const data = new Array(20).fill(0).map((item) => {
-    return {
-      time: moment().format('YYYY-MM-DD HH:mm:ss'),
-      direction: Math.random() > 0.5 ? '南向接口' : '北向接口',
-      name: 'pcpasf',
-      system: 'pcpasf',
-      status: Math.random() > 0.5 ? '0' : '1',
-      timeConsuming: Math.random().toFixed(2),
-      response: Math.random() > 0.5 ? '0' : '1',
-    };
+  const [loading, setLoading] = useState(false);
+  const [tableSource, setTableSource] = useState([]);
+  const [paginationParams, setPaginationParams] = useState({
+    pageNum: 1,
+    pageSize: 10,
   });
+  const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    handleSearchTable();
+  }, []);
 
   const goBack = () => {
-    console.log('click goBack');
     history.push('/');
+  };
+
+  const handleSearchTable = () => {
+    let formData = { ...form.getFieldValue() };
+
+    if (formData.time && formData.time.length > 0) {
+      formData.preOccurTime = moment(formData.time[0]).format(
+        'YYYY-MM-DD HH:mm:ss',
+      );
+      formData.afterOccurTime = moment(formData.time[1]).format(
+        'YYYY-MM-DD HH:mm:ss',
+      );
+    }
+
+    let params = {
+      ...formData,
+      ...paginationParams,
+    };
+
+    setLoading(true);
+    getInterfaceInfoListByPage(params)
+      .then((res) => {
+        if (res.code === 0) {
+          const { datas = [], rowCount = 0 } = res.data;
+          setTableSource(datas);
+          setTotal(rowCount);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const handleChangePagination = (page, pageSize) => {
+    setPaginationParams({ pageNum: page, pageSize });
+    handleSearchTable();
   };
 
   return (
@@ -48,35 +84,52 @@ const List = () => {
             </Form.Item>
           </div>
           <div className="item">
-            <Form.Item label="接口方向:" name="provinceCode">
+            <Form.Item label="接口方向:" name="direction">
               <Select style={{ width: '168px' }} allowClear>
-                <Option value={'all'} key={'all'}>
-                  {'全部'}
+                <Option value={'1'} key={'1'}>
+                  {'北向接口'}
+                </Option>
+                <Option value={'0'} key={'0'}>
+                  {'南向接口'}
                 </Option>
               </Select>
             </Form.Item>
           </div>
           <div className="item">
-            <Form.Item label="接口名称:" name="userName">
+            <Form.Item label="接口名称:" name="interfaceName">
               <Input maxLength={100} style={{ width: '168px' }} allowClear />
             </Form.Item>
           </div>
           <div className="item">
-            <Form.Item label="调用结果:" name="cityCode">
+            <Form.Item label="调用结果:" name="resultState">
               <Select style={{ width: '168px' }} allowClear>
-                <Option value={'all'} key={'all'}>
-                  {'全部'}
+                <Option value={'1'} key={'1'}>
+                  {'成功'}
+                </Option>
+                <Option value={'0'} key={'0'}>
+                  {'失败'}
                 </Option>
               </Select>
             </Form.Item>
           </div>
-          <Button type="primary" className="search-btn">
+          <Button
+            type="primary"
+            className="search-btn"
+            onClick={handleSearchTable}
+          >
             查询
           </Button>
         </Form>
 
         <div className="list-container">
-          <InterfaceMonitorTable pagination={true} dataSource={data} />
+          <Spin spinning={loading}>
+            <InterfaceMonitorTable
+              pagination={true}
+              dataSource={tableSource}
+              total={total}
+              onChangePagination={handleChangePagination}
+            />
+          </Spin>
         </div>
       </div>
     </div>
