@@ -51,7 +51,7 @@ const APIMonitor = () => {
     <div className="-p-ApiMonitor">
       <>
         <div className="header">
-          <span className="title">产业虚拟电厂接口服务检测可视化</span>
+          <span className="title">产业虚拟电厂接口服务监测可视化</span>
         </div>
         {/* 全屏 */}
         {/*<Full />*/}

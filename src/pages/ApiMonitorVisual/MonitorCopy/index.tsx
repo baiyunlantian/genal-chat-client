@@ -84,7 +84,7 @@ const Monitor = (props) => {
       return (
         <div className="Monitor_option" key={item.leftText}>
           <div className="left">
-            <img className="icon" src={item.iconUrl} />
+            {/*<img className="icon" src={item.iconUrl} />*/}
           </div>
           <div className="center">
             <div className="col">{item.leftText}</div>

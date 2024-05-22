@@ -68,7 +68,7 @@ const List = () => {
   return (
     <div className="-p-ApiMonitorList">
       <div className="header">
-        <span className="title">产业虚拟电厂接口服务检测可视化</span>
+        <span className="title">产业虚拟电厂接口服务监测可视化</span>
         <div className="goBack-btn" onClick={goBack}>
           <img src={GoBackIcon} />
           <span>返回</span>
