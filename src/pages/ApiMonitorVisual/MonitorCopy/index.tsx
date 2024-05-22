@@ -1,6 +1,6 @@
-import icon1Img from '@/assets/ApiMonitorVisual/Monitor/icon1.png';
-import icon2Img from '@/assets/ApiMonitorVisual/Monitor/icon2.png';
-import icon3Img from '@/assets/ApiMonitorVisual/Monitor/icon3.png';
+import icon1Img from '../../../assets/ApiMonitorVisual/Monitor/icon1.png';
+import icon2Img from '../../../assets/ApiMonitorVisual/Monitor/icon2.png';
+import icon3Img from '../../../assets/ApiMonitorVisual/Monitor/icon3.png';
 
 import { Col, Row, DatePicker, InputNumber, Spin } from 'antd';
 import { CalendarOutlined } from '@ant-design/icons/lib';
