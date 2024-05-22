@@ -1,6 +1,5 @@
 import { Row } from 'antd';
 import VPS from './VPS';
-import Full from './Full';
 import './index.less';
 import Monitor from './MonitorCopy';
 import Bottom from './Bottom';
@@ -8,9 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'umi';
 import { getInterfaceInfoCount } from '@/api';
 
-const APIMonitor = (props) => {
-  const { app, dispatch } = props;
-  const isFull = app.isFull;
+const APIMonitor = () => {
   const [infoCount, setInfoCount] = useState({
     south: {
       interNum: 0,
@@ -51,7 +48,7 @@ const APIMonitor = (props) => {
   }, []);
 
   return (
-    <div className={isFull ? '-p-ApiMonitor full' : '-p-ApiMonitor'}>
+    <div className="-p-ApiMonitor">
       <>
         <div className="header">
           <span className="title">产业虚拟电厂接口服务检测可视化</span>
@@ -86,4 +83,4 @@ const APIMonitor = (props) => {
   );
 };
 
-export default connect(({ app }) => ({ app }))(APIMonitor);
+export default APIMonitor;
