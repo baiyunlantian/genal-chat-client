@@ -5,6 +5,7 @@ import {
   ResponseInterceptor,
 } from 'umi-request';
 import { Message } from 'antd';
+import { BASE_URL } from '@/utils/config';
 
 const request = extend({
   timeout: 1000 * 60,
@@ -12,8 +13,9 @@ const request = extend({
 
 // 拦截请求
 request.interceptors.request.use((url, options: any) => {
+  console.log(process.env.NODE_ENV);
   return {
-    url,
+    url: process.env.NODE_ENV === 'development' ? url : BASE_URL + url,
     options: {
       ...options,
       interceptors: true,

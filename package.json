@@ -24,13 +24,12 @@
     "@ant-design/pro-layout": "^6.34.4",
     "antd": "^4.19.2",
     "copy-to-clipboard": "^3.3.3",
+    "cross-env": "^7.0.3",
     "echarts": "^5.4.2",
     "echarts-for-react": "^3.0.2",
-    "js-md5": "^0.7.3",
     "moment": "^2.29.4",
     "react": "17.x",
     "react-dom": "17.x",
-    "socket.io-client": "^2.3.0",
     "umi": "^3.5.21"
   },
   "devDependencies": {

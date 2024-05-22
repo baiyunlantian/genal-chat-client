@@ -1,80 +1,80 @@
 .table-container {
   position: relative;
 
-  .interface-monitor-table {
-    position: relative;
+  .ant-table {
+    background: unset;
 
-    .ant-table {
-      background: unset;
+    .ant-table-container {
+      font-family: Source Han Sans CN;
+      font-weight: 400;
+      font-size: 1.1429rem;
+      color: #c4e1ff;
+      background-color: transparent;
 
-      .ant-table-container {
-        font-family: Source Han Sans CN;
-        font-weight: 400;
-        font-size: 1.1429rem;
-        color: #c4e1ff;
-        background-color: transparent;
-
-        thead {
-          background-image: url('../../../../assets/ApiMonitorVisual/Bottom/table_header_bg.png');
-          background-size: 100% 100%;
-          tr {
-            th {
-              padding: 0.5714rem 1.1429rem;
-              font-family: Source Han Sans CN;
-              font-weight: bold;
-              font-size: 1.2857rem;
-              color: #e9f4ff;
-              background-color: transparent;
-              border-bottom: unset;
-            }
+      thead {
+        background-image: url('../../../../assets/ApiMonitorVisual/Bottom/table_header_bg.png');
+        background-size: 100% 100%;
+        tr {
+          th {
+            padding: 0.5714rem 1.1429rem;
+            font-family: Source Han Sans CN;
+            font-weight: bold;
+            font-size: 1.2857rem;
+            color: #e9f4ff;
+            background-color: transparent;
+            border-bottom: unset;
           }
         }
+      }
 
-        tbody {
-          position: relative;
+      tbody {
+        position: relative;
 
-          tr {
-            background-color: #103453;
+        tr {
+          background-color: #103453;
 
-            &:nth-child(2n) {
-              background-color: #10345378 !important;
-            }
+          &:nth-child(2n) {
+            background-color: #10345378 !important;
+          }
 
-            td {
-              padding: 0.5714rem 1.1429rem;
-              border-top: 0.3571rem solid rgba(0, 0, 0, 0.06);
-              border-bottom: unset;
+          td {
+            padding: 0.5714rem 1.1429rem;
+            border-top: 0.3571rem solid rgba(0, 0, 0, 0.06);
+            border-bottom: unset;
 
-              &:first-child {
-                position: relative;
-                width: 3.5rem;
+            &:first-child {
+              position: relative;
+              width: 3.5rem;
 
-                &::before {
-                  content: '';
-                  position: absolute;
-                  left: 0;
-                  top: 0;
-                  background-image: url('../../../../assets/ApiMonitorVisual/Bottom/td_icon.png');
-                  background-size: 100% 100%;
-                  width: 1rem;
-                  height: 0.8571rem;
-                }
-              }
-
-              .btn {
-                color: #3ee5fe;
-                cursor: pointer;
+              &::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                background-image: url('../../../../assets/ApiMonitorVisual/Bottom/td_icon.png');
+                background-size: 100% 100%;
+                width: 1rem;
+                height: 0.8571rem;
               }
             }
 
-            .ant-table-cell-row-hover {
-              background-color: #2a608c;
+            .btn {
+              color: #3ee5fe;
+              cursor: pointer;
             }
           }
-        }
 
-        .ant-empty-description {
-          color: #adc6e1;
+          .ant-table-cell-row-hover {
+            background-color: #2a608c;
+          }
+        }
+      }
+
+      .ant-empty-description {
+        color: #adc6e1;
+
+        &:hover {
+          background-color: #2a608c;
         }
       }
     }

@@ -6,17 +6,19 @@ import moment from 'moment';
 import CopyJS from 'copy-to-clipboard';
 
 type Props = {
-  pagination?: boolean;
+  showPagination?: boolean;
   total?: number;
   onChangePagination?: Function;
   dataSource: [];
+  pagination?: {};
 };
 
 const TableComponent: FC<Props> = ({
-  pagination = false,
+  showPagination = false,
   dataSource = [],
   onChangePagination,
   total,
+  pagination,
 }) => {
   const columns = [
     {
@@ -64,6 +66,7 @@ const TableComponent: FC<Props> = ({
       dataIndex: 'consumeTime',
       key: 'consumeTime',
       align: 'center',
+      render: (text) => <span>{text > 0 ? (text / 1000).toFixed(2) : 0}</span>,
     },
     {
       title: '调用反馈信息',
@@ -129,20 +132,17 @@ const TableComponent: FC<Props> = ({
   };
 
   const changePagination = (page, pageSize) => {
-    console.log('page', page);
-    console.log('pageSize', pageSize);
     onChangePagination(page, pageSize);
   };
 
   return (
     <div className="table-container">
       <Table
-        className="interface-monitor-table"
         columns={columns}
         dataSource={dataSource}
         pagination={false}
         scroll={
-          pagination === true
+          showPagination === true
             ? {
                 scrollToFirstRowOnChange: true,
                 y: 600,
@@ -151,10 +151,11 @@ const TableComponent: FC<Props> = ({
         }
       />
 
-      {pagination && (
+      {showPagination && (
         <Pagination
           showLessItems={false}
           total={total}
+          current={pagination.pageNum}
           showSizeChanger
           showQuickJumper
           showTotal={(total) => `总共${total}次记录`}

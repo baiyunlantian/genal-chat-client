@@ -30,10 +30,10 @@ export default defineConfig({
   ],
   fastRefresh: {},
   proxy: {
-    '/api': {
+    '/vpp': {
       target: 'http://10.8.0.129:8080',
       changeOrigin: true,
-      pathRewrite: { '^/api': '' },
+      pathRewrite: { '^/vpp': '/vpp' },
     },
     '/socket': {
       target: 'http://localhost:3025',

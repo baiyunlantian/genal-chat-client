@@ -24,14 +24,14 @@ const List = () => {
 
   useEffect(() => {
     handleSearchTable();
-  }, []);
+  }, [paginationParams]);
 
   const goBack = () => {
     history.push('/');
   };
 
   const handleSearchTable = () => {
-    let formData = { ...form.getFieldValue() };
+    let formData = form.getFieldsValue();
 
     if (formData.time && formData.time.length > 0) {
       formData.preOccurTime = moment(formData.time[0]).format(
@@ -61,9 +61,8 @@ const List = () => {
       });
   };
 
-  const handleChangePagination = (page, pageSize) => {
-    setPaginationParams({ pageNum: page, pageSize });
-    handleSearchTable();
+  const handleChangePagination = (pageNum, pageSize) => {
+    setPaginationParams({ pageNum, pageSize });
   };
 
   return (
@@ -124,8 +123,9 @@ const List = () => {
         <div className="list-container">
           <Spin spinning={loading}>
             <InterfaceMonitorTable
-              pagination={true}
+              showPagination={true}
               dataSource={tableSource}
+              pagination={paginationParams}
               total={total}
               onChangePagination={handleChangePagination}
             />
