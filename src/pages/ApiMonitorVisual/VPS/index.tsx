@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Spin } from 'antd';
 import './index.less';
 import { getInterfaceDayCount } from '@/api';
+import { LOOP_TIME } from '@/utils/config';
 
-const VPS = () => {
+const VPS = (props) => {
   /**
    * wlsb:物联设备
    * xndc:虚拟电厂运服平台
@@ -63,6 +64,18 @@ const VPS = () => {
   });
 
   useEffect(() => {
+    handleGetInterfaceDayCount();
+
+    let _timer = setInterval(() => {
+      handleGetInterfaceDayCount();
+    }, LOOP_TIME);
+
+    return () => {
+      clearInterval(_timer);
+    };
+  }, []);
+
+  const handleGetInterfaceDayCount = () => {
     setLoading(true);
     getInterfaceDayCount()
       .then((res) => {
@@ -73,7 +86,7 @@ const VPS = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  };
 
   return (
     <div className="VPS">

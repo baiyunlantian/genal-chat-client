@@ -7,38 +7,42 @@ import { CalendarOutlined } from '@ant-design/icons/lib';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import './index.less';
-import BarEcharrts from './Echarts';
+import BarEcharts from './Echarts';
 import GaugeContent from '../Gauge/index';
 import moment from 'moment';
 
 import { getInterfaceMonthCount } from '@/api';
+import { LOOP_TIME } from '@/utils/config';
+import { connect } from 'umi';
 
 const Monitor = (props) => {
-  const { direction, loading, infoCount } = props;
+  const { direction, loading, infoCount, app, dispatch } = props;
   const [month, setMonth] = useState(moment().format('YYYY-MM'));
   const [ratePercent, setRatePercent] = useState(0);
   const [barMonthCurve, setBarMonthCurve] = useState({});
   const [echartsLoading, setEchartsLoading] = useState(false);
 
   useEffect(() => {
-    let params = {
-      month,
-      direction: direction === '北' ? '1' : '0',
-    };
-
-    setEchartsLoading(true);
-    getInterfaceMonthCount(params)
-      .then((res) => {
-        if (res.code === 0) {
-          const { rate = 0, monthCurve = {} } = res.data;
-          setRatePercent(rate);
-          setBarMonthCurve(monthCurve);
-        }
-      })
-      .finally(() => {
-        setEchartsLoading(false);
-      });
+    handleGetInterfaceMonthCount();
   }, [month]);
+
+  useEffect(() => {
+    handleGetInterfaceMonthCount();
+
+    if (direction === '北') {
+      sessionStorage.setItem('northMonth', moment().format('YYYY-MM'));
+    } else {
+      sessionStorage.setItem('southMonth', moment().format('YYYY-MM'));
+    }
+
+    let _timer = setInterval(() => {
+      handleGetInterfaceMonthCount();
+    }, LOOP_TIME);
+
+    return () => {
+      clearInterval(_timer);
+    };
+  }, []);
 
   const monitorOptions = [
     {
@@ -79,6 +83,30 @@ const Monitor = (props) => {
     },
   ];
 
+  const handleGetInterfaceMonthCount = () => {
+    let _month =
+      direction === '北'
+        ? sessionStorage.getItem('northMonth')
+        : sessionStorage.getItem('southMonth');
+    let params = {
+      month: _month,
+      direction: direction === '北' ? '1' : '0',
+    };
+
+    setEchartsLoading(true);
+    getInterfaceMonthCount(params)
+      .then((res) => {
+        if (res.code === 0) {
+          const { rate = 0, monthCurve = {} } = res.data;
+          setRatePercent(rate);
+          setBarMonthCurve(monthCurve);
+        }
+      })
+      .finally(() => {
+        setEchartsLoading(false);
+      });
+  };
+
   const handleRenderMonitorOptions = (list = []) => {
     return list.map((item) => {
       return (
@@ -90,9 +118,15 @@ const Monitor = (props) => {
             <div className="col">{item.leftText}</div>
             <div className="col">
               <span className="value bold-font">
-                {infoCount[item.leftProp]}
+                {handleTransformUnit(item.leftProp)}
+                {/*{item.unit === '秒' && infoCount[item.leftProp] >= (1000 * 100) ? handleTransformUnit(infoCount[item.leftProp]) : infoCount[item.leftProp]}*/}
+                {/*{infoCount[item.leftProp]}*/}
               </span>
-              <span className="unit">{item.unit}</span>
+              <span className="unit">
+                {item.unit === '秒' && infoCount[item.leftProp] >= 1000 * 100
+                  ? '分'
+                  : item.unit}
+              </span>
             </div>
           </div>
           <div className="right">
@@ -100,18 +134,28 @@ const Monitor = (props) => {
               <div className="col">{item.rtText}</div>
               <div className="col vertical-center">
                 <span className="value" style={{ color: item.rtColor }}>
-                  {infoCount[item.rtProp]}
+                  {handleTransformUnit(item.rtProp)}
+                  {/*{item.unit === '秒' && infoCount[item.rtProp] >= (1000 * 100) ? handleTransformUnit(infoCount[item.rtProp]) : infoCount[item.rtProp]}*/}
                 </span>
-                <span className="unit">{item.unit}</span>
+                <span className="unit">
+                  {item.unit === '秒' && infoCount[item.rtProp] >= 1000 * 100
+                    ? '分'
+                    : item.unit}
+                </span>
               </div>
             </div>
             <div className="item">
               <div className="col">{item.rbText}</div>
               <div className="col vertical-center">
                 <span className="value" style={{ color: item.rbColor }}>
-                  {infoCount[item.rbProp]}
+                  {handleTransformUnit(item.rbProp)}
+                  {/*{item.unit === '秒' && infoCount[item.rbProp] >= (1000 * 100) ? handleTransformUnit(infoCount[item.rbProp]) : infoCount[item.rbProp]}*/}
                 </span>
-                <span className="unit">{item.unit}</span>
+                <span className="unit">
+                  {item.unit === '秒' && infoCount[item.rbProp] >= 1000 * 100
+                    ? '分'
+                    : item.unit}
+                </span>
               </div>
             </div>
           </div>
@@ -122,6 +166,39 @@ const Monitor = (props) => {
 
   const handleChangeMonth = (date, dateString) => {
     setMonth(dateString);
+    if (direction === '北') {
+      sessionStorage.setItem('northMonth', dateString);
+    } else {
+      sessionStorage.setItem('southMonth', dateString);
+    }
+  };
+
+  const handleTransformUnit = (key) => {
+    if (key === 'aveTime' || key === 'fastestTime' || key === 'slowestTime') {
+      // 后端返回为毫秒级
+      let millisecond = infoCount[key];
+      let second = millisecond / 1000;
+
+      // 大于100秒时，将格式转换成分钟
+      if (second >= 100) {
+        let min = Math.floor(second / 60);
+        // 秒数转换成分钟
+        let decimalPoint = Math.round(second % 60) / 60;
+        // 保留一位小数
+        let point = Math.ceil(decimalPoint * 10) / 10;
+        return min + point;
+      } else if (second >= 0.1) {
+        return second.toFixed(1);
+      }
+      // 小于0.1秒时，显示 ‘<0.1’
+      else if (second > 0) {
+        return '<0.1';
+      } else {
+        return '0';
+      }
+    } else {
+      return infoCount[key];
+    }
   };
 
   return (
@@ -158,7 +235,7 @@ const Monitor = (props) => {
         </div>
 
         <Spin spinning={echartsLoading}>
-          <BarEcharrts dataSource={barMonthCurve} />
+          <BarEcharts dataSource={barMonthCurve} />
           <GaugeContent value={ratePercent} />
         </Spin>
       </div>
@@ -166,4 +243,4 @@ const Monitor = (props) => {
   );
 };
 
-export default Monitor;
+export default connect(({ app }: any) => ({ app }))(Monitor);

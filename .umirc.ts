@@ -1,6 +1,6 @@
 import { defineConfig } from 'umi';
 import { BASE_URL } from '@/utils/config';
-import Routes from '@/routes/index';
+import Routes from './src/routes/index';
 
 export default defineConfig({
   locale: {
@@ -16,18 +16,7 @@ export default defineConfig({
   // 开启ant-design-pro布局
   // layout: {},
   devtool: false,
-  routes: [
-    {
-      title: '接口检测可视化列表',
-      path: '/list',
-      component: `@/pages/ApiMonitorVisual/List`,
-    },
-    {
-      title: '接口检测可视化',
-      path: '/*',
-      component: `@/pages/ApiMonitorVisual/index`,
-    },
-  ],
+  routes: Routes,
   fastRefresh: {},
   proxy: {
     '/vpp': {

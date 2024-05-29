@@ -43,12 +43,16 @@ const TableComponent: FC<Props> = ({
       dataIndex: 'interfaceName',
       key: 'interfaceName',
       align: 'center',
+      className: 'over-hide',
+      width: '21.4287rem',
     },
     {
       title: '交互方平台/系统',
       dataIndex: 'platform',
       key: 'platform',
       align: 'center',
+      className: 'over-hide',
+      width: '14.2857rem',
     },
     {
       title: '接口调用结果',
@@ -66,6 +70,7 @@ const TableComponent: FC<Props> = ({
       dataIndex: 'consumeTime',
       key: 'consumeTime',
       align: 'center',
+      width: '10rem',
       render: (text) => <span>{text > 0 ? (text / 1000).toFixed(2) : 0}</span>,
     },
     {
@@ -73,12 +78,14 @@ const TableComponent: FC<Props> = ({
       dataIndex: 'feedback',
       key: 'feedback',
       align: 'center',
+      width: '10rem',
     },
     {
       title: '接口JSON',
       align: 'center',
       dataIndex: 'json',
       key: 'json',
+      width: '10rem',
       render: (text, record) => (
         <span className="btn" onClick={() => handleShowModal(record, 'json')}>
           查看
@@ -90,6 +97,7 @@ const TableComponent: FC<Props> = ({
       align: 'center',
       dataIndex: 'log',
       key: 'log',
+      width: '10rem',
       render: (text, record) => (
         <span className="btn" onClick={() => handleShowModal(record, 'log')}>
           查看
@@ -145,7 +153,7 @@ const TableComponent: FC<Props> = ({
           showPagination === true
             ? {
                 scrollToFirstRowOnChange: true,
-                y: 600,
+                y: 750,
               }
             : {}
         }
@@ -156,8 +164,10 @@ const TableComponent: FC<Props> = ({
           showLessItems={false}
           total={total}
           current={pagination.pageNum}
+          defaultPageSize={pagination.pageSize}
           showSizeChanger
           showQuickJumper
+          pageSizeOptions={['15', '30', '50', '100']}
           showTotal={(total) => `总共${total}次记录`}
           onChange={changePagination}
         />

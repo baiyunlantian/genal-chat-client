@@ -13,7 +13,6 @@ const request = extend({
 
 // 拦截请求
 request.interceptors.request.use((url, options: any) => {
-  console.log(process.env.NODE_ENV);
   return {
     url: process.env.NODE_ENV === 'development' ? url : BASE_URL + url,
     options: {

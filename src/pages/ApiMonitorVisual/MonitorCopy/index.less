@@ -12,6 +12,7 @@
     &::after {
       content: '';
       position: absolute;
+      z-index: -1;
       left: 0;
       top: 0;
       width: 100%;
@@ -68,7 +69,7 @@
     }
 
     .right {
-      width: 9.5714rem;
+      width: 11.4287rem;
       height: 4.8571rem;
       margin-right: 2rem;
 
@@ -79,12 +80,14 @@
         background-image: url('../../../assets/ApiMonitorVisual/Monitor/option_arrow_bg.png');
         background-size: 100% 100%;
         margin-bottom: 0.3571rem;
+        padding-left: 0.5rem;
 
         .value {
           font-family: Source Han Sans CN;
           font-weight: bold;
           font-size: 1.5714rem;
-          color: #00f5ad;
+          text-align: right;
+          width: 5rem;
           opacity: 0.8;
         }
       }

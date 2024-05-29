@@ -3,7 +3,7 @@ import { Button, Form, Input, message, Row, Select, DatePicker } from 'antd';
 import './index.less';
 import InterfaceMonitorTable from '../components/Table/index';
 import moment from 'moment';
-import { history } from 'umi';
+import { history, connect } from 'umi';
 import GoBackIcon from '@/assets/ApiMonitorVisual/List/goBack_icon.png';
 import { getInterfaceInfoListByPage } from '@/api';
 import { Spin } from 'antd';
@@ -11,14 +11,15 @@ import { Spin } from 'antd';
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 
-const List = () => {
+const List = (props) => {
+  const { dispatch } = props;
   const [form] = Form.useForm();
 
   const [loading, setLoading] = useState(false);
   const [tableSource, setTableSource] = useState([]);
   const [paginationParams, setPaginationParams] = useState({
     pageNum: 1,
-    pageSize: 10,
+    pageSize: 15,
   });
   const [total, setTotal] = useState(0);
 
@@ -27,6 +28,13 @@ const List = () => {
   }, [paginationParams]);
 
   const goBack = () => {
+    dispatch({
+      type: 'app/setIsKeepAlive',
+      payload: {
+        key: 'isKeepAlive',
+        value: true,
+      },
+    });
     history.push('/');
   };
 
@@ -136,4 +144,4 @@ const List = () => {
   );
 };
 
-export default List;
+export default connect(({ app }: any) => ({ app }))(List);

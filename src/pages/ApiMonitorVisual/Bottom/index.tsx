@@ -4,12 +4,25 @@ import InterfaceMonitorTable from '../components/Table/index';
 import { getInterfaceInfoListByPage } from '@/api';
 import { Spin } from 'antd';
 import { history } from 'umi';
+import { LOOP_TIME } from '@/utils/config';
 
-const Bottom = () => {
+const Bottom = (props) => {
   const [loading, setLoading] = useState(false);
   const [tableSource, setTableSource] = useState([]);
 
   useEffect(() => {
+    handleGetInterfaceInfoListByPage();
+
+    let _timer = setInterval(() => {
+      handleGetInterfaceInfoListByPage();
+    }, LOOP_TIME);
+
+    return () => {
+      clearInterval(_timer);
+    };
+  }, []);
+
+  const handleGetInterfaceInfoListByPage = () => {
     let params = {
       pageNum: 1,
       pageSize: 4,
@@ -26,7 +39,7 @@ const Bottom = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  };
 
   const handleJumpToList = () => {
     history.push('/list');
